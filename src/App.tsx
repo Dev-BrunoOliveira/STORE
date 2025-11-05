@@ -1,25 +1,33 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; 
+import Layout from './components/Layout';
+import Home from './pages/Home';
+import ProductDetails from './pages/ProductDetails';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    
+    <Router>
+      <Layout>
+        
+        <Routes>
+          
+          <Route path="/" element={<Home />} />
+          
+          
+          {/* O ':slug' é um parâmetro dinâmico para carregar o produto correto */}
+          <Route path="/produto/:slug" element={<ProductDetails />} />
+
+          
+          <Route path="*" element={
+              <div className="text-center py-20">
+                  <h1 className="text-5xl font-black text-treze-accent">404</h1>
+                  <p className="text-xl mt-4">Página não encontrada. Volte para a <a href="/" className="underline text-treze-accent">Home</a>.</p>
+              </div>
+          } />
+        </Routes>
+      </Layout>
+    </Router>
   );
 }
 
