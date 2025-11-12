@@ -51,7 +51,7 @@ a:hover {
 
 .btn-accent {
   background-color: var(--color-accent);
-  color: var(--color-black);
+  color: var(--color-white);
   font-weight: bold;
   padding: 12px 24px;
   text-transform: uppercase;

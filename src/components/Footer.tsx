@@ -46,8 +46,8 @@ const Footer: React.FC = () => {
           {/* Coluna 3: Contato */}
           <div>
             <h4 className="text-uppercase-black">Contato</h4>
-            <p>WhatsApp: (11) 97175-XXXX</p>
-            <p>E-mail: contato@laranjodina.com</p>
+            <p>WhatsApp: (11) 95237-8064</p>
+            <p>E-mail: contato@laranjodinastore.com</p>
           </div>
 
           {/* Coluna 4: Mídias Sociais */}

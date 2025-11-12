@@ -40,7 +40,7 @@ const Home: React.FC = () => {
         <div className="hero-content">
           <h2 className="text-uppercase-black hero-title">
             <span style={{ color: "var(--color-accent)" }}>A Vitamina C</span>{" "}
-            Que Você Precisa
+            Que Você Precisa !
             <br />
           </h2>
 

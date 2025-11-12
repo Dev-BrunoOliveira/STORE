@@ -7,6 +7,7 @@ import Hiphop from "./pages/Hiphop";
 import Camisetas from "./pages/Camisetas";
 import ProductDetails from "./pages/ProductDetails";
 import Cart from "./components/Cart";
+import { Toaster } from 'react-hot-toast';
 
 function App() {
   return (
@@ -61,7 +62,18 @@ function App() {
           />
         </Routes>
       </Layout>
+<Toaster 
+          position="bottom-center" // Posição comum para notificações de carrinho
+          toastOptions={{
+              style: {
+                  background: 'var(--color-accent)', // Fundo Laranja/Vermelho
+                  color: 'var(--color-black)', // Texto Preto
+                  fontWeight: 'bold',
+              },
+          }}
+      />
     </Router>
+    
   );
 }
 

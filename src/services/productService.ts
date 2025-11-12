@@ -104,6 +104,54 @@ const FULL_CATALOG: ProductDetailsData[] = [
     sizes: ["P", "M", "G", "GG"],
     category: ["lancamentos", "hiphop", "camisetas"],
   },
+  {
+    id: 9,
+    name: "Camiseta Trem Bala",
+    price: 119.9,
+    imageUrl: "/img/TREM BALA PEITA.jpg",
+    slug: "trem-bala",
+    description:
+      "Camiseta com estampa inspiradora do Trem Bala de The Boys. Conforto e estilo em uma só peça.",
+    colors: ["Preto", "Branca"],
+    sizes: ["P", "M", "G", "GG"],
+    category: ["lancamentos", "camisetas"],
+  },
+  {
+    id: 10,
+    name: "Camiseta The Bear Yes Chef!",
+    price: 119.9,
+    imageUrl: "/img/THE BEAR PEITA.jpg",
+    slug: "the-bear-yes-chef",
+    description:
+      "Camiseta temática The Bear com a icônica frase 'Yes Chef!'. Conforto e estilo para os fãs da série.",
+    colors: ["Preto", "Branca"],
+    sizes: ["P", "M", "G", "GG"],
+    category: ["lancamentos", "camisetas"],
+  },
+  {
+    id: 11,
+    name: "Camiseta Agostinho Carrara",
+    price: 119.9,
+    imageUrl: "/img/AGOSTINHO PEITA.jpg",
+    slug: "agostinho-carrara",
+    description:
+      "Camiseta divertida do Agostinho Carrara, personagem icônico da TV brasileira. Perfeita para fãs de humor.",
+    colors: ["Preto", "Branca"],
+    sizes: ["P", "M", "G", "GG"],
+    category: ["lancamentos", "camisetas"],
+  },
+  {
+    id: 12,
+    name: "Camiseta Airton Senna",
+    price: 119.9,
+    imageUrl: "/img/SENNA PEITA.jpg",
+    slug: "airton-senna",
+    description:
+      "Camiseta em homenagem a Airton Senna, lenda do automobilismo brasileiro. Estilo e conforto para os fãs de velocidade.",
+    colors: ["Preto", "Branca"],
+    sizes: ["P", "M", "G", "GG"],
+    category: ["lancamentos", "camisetas"],
+  },
 ];
 
 /**
@@ -120,7 +168,7 @@ export const fetchProducts = (
       if (categorySlug === "mais-vendidos") {
         filteredProducts = FULL_CATALOG.slice(0, 4);
       } else if (categorySlug && categorySlug !== "todos") {
-        // CORREÇÃO DO FILTRO: Usar .some() para verificar se o array de categorias INCLUI o slug
+        
         filteredProducts = FULL_CATALOG.filter((p) =>
           p.category.some((cat) => cat === categorySlug)
         );

@@ -4,6 +4,7 @@ import { FiShoppingCart } from "react-icons/fi";
 import { Product } from "../types/Product";
 import { getProductBySlug } from "../services/productService";
 import { useCartStore } from "../components/store/cartStore";
+import toast from 'react-hot-toast';
 
 interface DetailedProduct extends Product {
   description: string;
@@ -56,8 +57,10 @@ const ProductDetails: React.FC = () => {
 
     // Adiciona o item ao Zustand Store
     addItem(product, selectedSize);
-    alert(`"${product.name} (Tam: ${selectedSize})" adicionado ao carrinho!`);
-  };
+   toast.success(`"${product.name} (Tam: ${selectedSize})" adicionado!`, {
+             icon: '🛒', 
+        });
+    };
 
   const formatPrice = (price: number) => {
     return price.toLocaleString("pt-BR", {
