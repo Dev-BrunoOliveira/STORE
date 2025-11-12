@@ -17,15 +17,13 @@ const Header: React.FC = () => {
 
         <div className="header-logo">
           <Link to="/" className="header-logo-link">
-            <img 
-                
-                src={'/img/logo.png'} 
-                alt="Laranjodina Logo" 
-                className="logo-img" 
+            <img
+              src={"/img/logo.png"}
+              alt="Laranjodina Logo"
+              className="logo-img"
             />
           </Link>
         </div>
-        
 
         <nav className="header-nav">
           <Link to="/" className="nav-link">
@@ -36,9 +34,6 @@ const Header: React.FC = () => {
           </Link>
           <Link to="/camisetas" className="nav-link">
             Camisetas
-          </Link>
-          <Link to="/acessorios" className="nav-link">
-            Acessórios
           </Link>
         </nav>
 
