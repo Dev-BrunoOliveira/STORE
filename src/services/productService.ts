@@ -66,7 +66,7 @@ const FULL_CATALOG: ProductDetailsData[] = [
     description: "Black edition Tyler The Creator, estilo único e autêntico.",
     colors: ["Preto", "Branca"],
     sizes: ["P", "M", "G", "GG"],
-    category: ["lancamentos", "camisetas"],
+    category: ["lancamentos", "camisetas","hiphop"],
   },
   {
     id: 6,
@@ -76,8 +76,32 @@ const FULL_CATALOG: ProductDetailsData[] = [
     slug: "travis-scott",
     description:
       "Estampa exclusiva Travis Scott, tecido premium e conforto garantido.",
-    colors: ["Cinza"],
-    sizes: ["M", "G"],
+    colors: ["Preto", "Branca"],
+    sizes: ["P", "M", "G", "GG"],
+    category: ["lancamentos", "hiphop", "camisetas"],
+  },
+  {
+    id: 7,
+    name: "Camiseta Kendrick Lamar",
+    price: 169.9,
+    imageUrl: "/img/KENDRICK PEITA.jpg",
+    slug: "kendrick-lamar",
+    description:
+      "Estampa exclusiva Kendrick Lamar, tecido premium e conforto garantido.",
+    colors: ["Preto", "Branca"],
+    sizes: ["P", "M", "G", "GG"],
+    category: ["lancamentos", "hiphop", "camisetas"],
+  },
+  {
+    id: 8,
+    name: "Camiseta Kendrick Lamar Super Bowl",
+    price: 169.9,
+    imageUrl: "/img/KENDRICK SB.jpg",
+    slug: "kendrick-lamar",
+    description:
+      "Estampa exclusiva Kendrick Lamar, tecido premium e conforto garantido.",
+    colors: ["Preto", "Branca"],
+    sizes: ["P", "M", "G", "GG"],
     category: ["lancamentos", "hiphop", "camisetas"],
   },
 ];
