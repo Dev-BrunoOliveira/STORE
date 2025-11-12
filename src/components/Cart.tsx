@@ -48,7 +48,7 @@ const Cart: React.FC = () => {
     );
   }
 
-  // Layout com itens e resumo
+ 
   return (
     <div className="container cart-page">
       <h1 className="text-uppercase-black cart-header-title">

@@ -629,10 +629,36 @@ a:hover {
     padding: 15px 0;
 }
 
+.spinner-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 50px 0;
+    width: 100%;
+}
 
-/* ========================================= */
-/* 9. MÍDIAS QUERIES (RESPONSIVIDADE GERAL) */
-/* ========================================= */
+.spinner {
+    border: 5px solid var(--color-card-bg); /* Cor base (cinza escuro) */
+    border-top: 5px solid var(--color-accent); /* Cor do giro (laranja/vermelho) */
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite; /* Aplica a animação */
+    margin-bottom: 10px;
+}
+
+.spinner-text {
+    font-size: 1rem;
+    color: var(--color-text-gray);
+}
+
+/* Definição da Animação de Giro */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+/* Passo 3: Integrar o Spinner na */
 
 @media (max-width: 1024px) {
     /* Layout de Produto */
