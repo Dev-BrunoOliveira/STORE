@@ -117,6 +117,7 @@ a:hover {
   display: flex;
   flex-grow: 1;
   justify-content: center;
+  font-size: large;
   gap: 2rem;
 }
 
@@ -328,7 +329,7 @@ a:hover {
   inset: 0;
   background-size: cover;
   background-position: center;
-  opacity: 0.4;
+  opacity: 0.9;
 }
 
 .hero-content {
