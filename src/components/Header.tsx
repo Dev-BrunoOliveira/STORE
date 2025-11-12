@@ -18,7 +18,7 @@ const Header: React.FC = () => {
         <div className="header-logo">
           <Link to="/" className="header-logo-link">
             <img
-              src={"/img/logo.png"}
+              src={"/img/LOGO.png"}
               alt="Laranjodina Logo"
               className="logo-img"
             />
