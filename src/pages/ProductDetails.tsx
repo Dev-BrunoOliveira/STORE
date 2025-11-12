@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { FiShoppingCart } from "react-icons/fi";
+//import { FiShoppingCart } from "react-icons/fi";
 import { Product } from "../types/Product";
 import { getProductBySlug } from "../services/productService";
 import { useCartStore } from "../components/store/cartStore";

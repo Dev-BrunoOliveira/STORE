@@ -49,22 +49,6 @@ const Footer: React.FC = () => {
             <p>WhatsApp: (11) 95237-8064</p>
             <p>E-mail: contato@laranjodinastore.com</p>
           </div>
-
-          {/* Coluna 4: Mídias Sociais */}
-          <div>
-            <h4 className="text-uppercase-black">Siga LARANJODINA</h4>
-            <div className="social-icons-group">
-              <a href="#" aria-label="WhatsApp" className="icon-action">
-                <FaWhatsapp size={20} />
-              </a>
-              <a href="#" aria-label="Instagram" className="icon-action">
-                <FaInstagram size={20} />
-              </a>
-              <a href="#" aria-label="Facebook" className="icon-action">
-                <FaFacebookF size={20} />
-              </a>
-            </div>
-          </div>
         </div>
 
         <div className="footer-bottom">
