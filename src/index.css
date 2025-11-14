@@ -296,7 +296,7 @@ a:hover {
 .product-card:hover .btn-card-details {
   opacity: 1;
   visibility: visible;
-  transform: translateY(0); /* Desliza o botão para cima no hover */
+  transform: translateY(0); 
 }
 
 .home-section {
@@ -728,7 +728,7 @@ a:hover {
     gap: 1rem;
   }
   .product-card-image {
-    height: 200px;
+    height: 400px;
   }
   .category-grid {
     grid-template-columns: 1fr;
