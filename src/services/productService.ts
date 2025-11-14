@@ -11,13 +11,12 @@ const FULL_CATALOG: ProductDetailsData[] = [
   {
     id: 1,
     name: "Camiseta 2PAC Classic",
-    price: 99.9,
-    oldPrice: 119.9,
+    price: 119.9,
     imageUrl: "/img/2PAC PEITA.jpg",
     slug: "camiseta-2pac",
     description:
       "Camiseta 100% algodão com estampa serigráfica de alta qualidade. Perfeita para o estilo Hiphop.",
-    colors: ["Preto", "Branco"],
+    colors: ["Preto", "Branca"],
     sizes: ["P", "M", "G", "GG"],
     category: ["hiphop", "camisetas"],
   },
@@ -29,7 +28,7 @@ const FULL_CATALOG: ProductDetailsData[] = [
     slug: "camiseta-will",
     description:
       "Design exclusivo Fresh Prince, modelagem oversized. Algodão fio 30.",
-    colors: ["Branco", "Roxo"],
+    colors: ["Preto", "Branca"],
     sizes: ["P", "M", "G", "GG"],
     category: ["hiphop", "camisetas"],
   },
@@ -41,7 +40,7 @@ const FULL_CATALOG: ProductDetailsData[] = [
     slug: "camiseta-jordan",
     description:
       "Camiseta em homenagem ao GOAT do basquete, estampa vibrante e durável.",
-    colors: ["Vermelho", "Preto"],
+    colors: ["Preto", "Branca"],
     sizes: ["P", "M", "G", "GG"],
     category: ["cultura negra", "camisetas"],
   },
@@ -53,7 +52,7 @@ const FULL_CATALOG: ProductDetailsData[] = [
     slug: "camiseta-leblon",
     description:
       "Peça de lançamento com arte conceitual urbana. Edição limitada.",
-    colors: ["Preto", "Cinza"],
+    colors: ["Preto", "Branca"],
     sizes: ["P", "M", "G", "GG"],
     category: ["cultura negra", "camisetas"],
   },

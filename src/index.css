@@ -9,8 +9,8 @@
   --color-card-hover: #353535; /* Fundo de card no hover */
   --color-success: #4caf50; /* Verde para sucesso/frete grátis */
 
- --font-heading: 'Rajdhani', sans-serif; /* Para títulos e banners */
-    --font-body: 'Montserrat', sans-serif; /* Para corpo, links e cards */
+  --font-heading: "Rajdhani", sans-serif; /* Para títulos e banners */
+  --font-body: "Montserrat", sans-serif; /* Para corpo, links e cards */
 }
 
 * {
@@ -225,18 +225,16 @@ a:hover {
 }
 
 .product-card-details {
+  min-height: 100px;
   text-align: left;
   padding: 0 4px;
+  position: relative;
 }
 
 .product-card-name {
-  font-size: 1.125rem;
-  font-weight: bold;
-  text-transform: uppercase;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-bottom: 4px;
+  height: 1.125rem;
+  line-height: 1.125rem;
+  margin-bottom: 8px;
 }
 
 .product-card:hover .product-card-name {
@@ -247,7 +245,7 @@ a:hover {
   display: flex;
   align-items: baseline;
   gap: 8px;
-  margin-bottom: 8px;
+  margin-bottom: 15px;
 }
 
 .product-card-price {
@@ -298,7 +296,7 @@ a:hover {
 .product-card:hover .btn-card-details {
   opacity: 1;
   visibility: visible;
-  transform: translateY(0);
+  transform: translateY(0); /* Desliza o botão para cima no hover */
 }
 
 .home-section {
@@ -726,7 +724,7 @@ a:hover {
     display: none;
   }
   .home-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(1, 1fr);
     gap: 1rem;
   }
   .product-card-image {
