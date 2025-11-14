@@ -9,8 +9,8 @@
   --color-card-hover: #353535; /* Fundo de card no hover */
   --color-success: #4caf50; /* Verde para sucesso/frete grátis */
 
-  --font-heading: "Impact", "Arial Black", sans-serif;
-  --font-body: "Arial", sans-serif;
+ --font-heading: 'Rajdhani', sans-serif; /* Para títulos e banners */
+    --font-body: 'Montserrat', sans-serif; /* Para corpo, links e cards */
 }
 
 * {
@@ -637,6 +637,66 @@ a:hover {
   }
   100% {
     transform: rotate(360deg);
+  }
+}
+
+.mobile-menu-drawer {
+  position: fixed;
+  top: 90px;
+  left: 0;
+  width: 100%;
+  height: calc(100vh - 90px);
+  background-color: rgba(0, 0, 0, 0.95);
+  padding: 20px 0;
+
+  transform: translateX(-100%);
+  transition: transform 0.4s ease-in-out;
+  z-index: 40;
+}
+
+.mobile-menu-drawer.open {
+  transform: translateX(0);
+}
+
+.mobile-nav-link {
+  display: block;
+  padding: 15px 0;
+  border-bottom: 1px solid #333;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.mobile-checkout-btn {
+  display: block;
+  width: 90%;
+  margin: 20px auto 0;
+  padding: 12px 0;
+}
+
+@media (max-width: 1024px) {
+}
+
+@media (max-width: 768px) {
+  .mobile-menu-toggle {
+    display: block;
+  }
+
+  .header-nav {
+    display: none;
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile-menu-drawer {
+    display: none;
+  }
+  .mobile-menu-toggle {
+    display: none;
+  }
+  .header-nav {
+    display: flex;
   }
 }
 

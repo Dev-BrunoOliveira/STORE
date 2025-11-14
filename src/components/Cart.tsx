@@ -38,17 +38,14 @@ const Cart: React.FC = () => {
         <h1 className="text-uppercase-black cart-header-title">
           Seu Carrinho Está Vazio
         </h1>
-        <p className="empty-cart-message">
-          Adicione umas peças para começar a rolê!
-        </p>
+        <p className="empty-cart-message"></p>
         <Link to="/" className="btn-accent empty-cart-button">
-          Ver Lançamentos
+          Ver Produtos
         </Link>
       </div>
     );
   }
 
- 
   return (
     <div className="container cart-page">
       <h1 className="text-uppercase-black cart-header-title">

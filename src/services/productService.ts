@@ -66,7 +66,7 @@ const FULL_CATALOG: ProductDetailsData[] = [
     description: "Black edition Tyler The Creator, estilo único e autêntico.",
     colors: ["Preto", "Branca"],
     sizes: ["P", "M", "G", "GG"],
-    category: ["lancamentos", "camisetas","hiphop"],
+    category: ["lancamentos", "camisetas", "hiphop"],
   },
   {
     id: 6,
@@ -168,7 +168,6 @@ export const fetchProducts = (
       if (categorySlug === "mais-vendidos") {
         filteredProducts = FULL_CATALOG.slice(0, 4);
       } else if (categorySlug && categorySlug !== "todos") {
-        
         filteredProducts = FULL_CATALOG.filter((p) =>
           p.category.some((cat) => cat === categorySlug)
         );
@@ -179,15 +178,11 @@ export const fetchProducts = (
   });
 };
 
-/**
- * Busca um único produto pelo slug.
- */
 export const getProductBySlug = (
   slug: string
 ): Promise<ProductDetailsData | undefined> => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      // Busca o produto no catálogo completo
       const product = FULL_CATALOG.find((p) => p.slug === slug);
       resolve(product);
     }, 300);

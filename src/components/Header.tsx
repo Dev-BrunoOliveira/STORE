@@ -1,9 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { FiSearch, FiUser, FiShoppingBag, FiMenu } from "react-icons/fi";
+
+import { FiSearch, FiUser, FiShoppingBag, FiMenu, FiX } from "react-icons/fi";
 import { useCartStore } from "./store/cartStore";
 
 const Header: React.FC = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const handleMenuToggle = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   const totalItems = useCartStore((state) =>
     state.items.reduce((total, item) => total + item.quantity, 0)
   );
@@ -11,8 +18,12 @@ const Header: React.FC = () => {
   return (
     <header className="header-main">
       <div className="container header-content">
-        <div className="mobile-menu-toggle">
-          <FiMenu size={24} className="icon-action" />
+        <div className="mobile-menu-toggle" onClick={handleMenuToggle}>
+          {isMenuOpen ? (
+            <FiX size={24} className="icon-action" />
+          ) : (
+            <FiMenu size={24} className="icon-action" />
+          )}
         </div>
 
         <div className="header-logo">
@@ -50,6 +61,45 @@ const Header: React.FC = () => {
           </div>
         </div>
       </div>
+
+      <nav className={`mobile-menu-drawer ${isMenuOpen ? "open" : ""}`}>
+        <div className="container">
+          <Link to="/" className="mobile-nav-link" onClick={handleMenuToggle}>
+            Início
+          </Link>
+          <Link
+            to="/lancamentos"
+            className="mobile-nav-link"
+            onClick={handleMenuToggle}
+          >
+            Lançamentos
+          </Link>
+          <Link
+            to="/camisetas"
+            className="mobile-nav-link"
+            onClick={handleMenuToggle}
+          >
+            Camisetas
+          </Link>
+          <Link
+            to="/hiphop"
+            className="mobile-nav-link"
+            onClick={handleMenuToggle}
+          >
+            Hip-hop
+          </Link>
+
+          <div className="mobile-menu-actions">
+            <Link
+              to="/carrinho"
+              onClick={handleMenuToggle}
+              className="btn-accent mobile-checkout-btn"
+            >
+              Ir para o Carrinho ({totalItems})
+            </Link>
+          </div>
+        </div>
+      </nav>
     </header>
   );
 };

@@ -63,11 +63,11 @@ function App() {
         </Routes>
       </Layout>
 <Toaster 
-          position="bottom-center" // Posição comum para notificações de carrinho
+          position="bottom-center" 
           toastOptions={{
               style: {
-                  background: 'var(--color-accent)', // Fundo Laranja/Vermelho
-                  color: 'var(--color-black)', // Texto Preto
+                  background: 'var(--color-accent)', 
+                  color: 'var(--color-black)', 
                   fontWeight: 'bold',
               },
           }}
