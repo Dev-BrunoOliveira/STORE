@@ -106,16 +106,7 @@ const ProductDetails: React.FC = () => {
             className="main-image"
           />
           <div className="thumbnail-group">
-            <img
-              src="https://via.placeholder.com/100x120/444444?text=Detalhe+1"
-              alt="Detalhe 1"
-              className="thumbnail active"
-            />
-            <img
-              src="https://via.placeholder.com/100x120/444444?text=Detalhe+2"
-              alt="Detalhe 2"
-              className="thumbnail"
-            />
+            
           </div>
         </div>
 
