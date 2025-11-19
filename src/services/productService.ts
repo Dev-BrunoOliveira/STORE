@@ -70,7 +70,7 @@ const FULL_CATALOG: ProductDetailsData[] = [
   {
     id: 6,
     name: "Camiseta Travis Scott",
-    price: 169.9,
+    price: 119.9,
     imageUrl: "/img/TRAVIS PEITA.jpg",
     slug: "travis-scott",
     description:
@@ -82,7 +82,7 @@ const FULL_CATALOG: ProductDetailsData[] = [
   {
     id: 7,
     name: "Camiseta Kendrick Lamar",
-    price: 169.9,
+    price: 119.9,
     imageUrl: "/img/KENDRICK PEITA.jpg",
     slug: "kendrick-lamar",
     description:
@@ -94,7 +94,7 @@ const FULL_CATALOG: ProductDetailsData[] = [
   {
     id: 8,
     name: "Camiseta Kendrick Lamar Super Bowl",
-    price: 169.9,
+    price: 119.9,
     imageUrl: "/img/KENDRICK SB.jpg",
     slug: "kendrick-lamar",
     description:
