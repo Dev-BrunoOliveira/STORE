@@ -225,16 +225,16 @@ a:hover {
 }
 
 .product-card-details {
-  min-height: auto; 
-  padding: 0 2px;   
+  min-height: auto;
+  padding: 0 2px;
 }
 
 .product-card-name {
   height: 1.125rem;
   line-height: 1.125rem;
   white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .product-card:hover .product-card-name {
@@ -300,7 +300,7 @@ a:hover {
 .product-card:hover .btn-card-details {
   opacity: 1;
   visibility: visible;
-  transform: translateY(0); 
+  transform: translateY(0);
 }
 
 .home-section {
@@ -492,6 +492,18 @@ a:hover {
 
 .cart-page {
   padding-top: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cart-layout-grid {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 40px;
 }
 
 .cart-header-title {
@@ -501,26 +513,26 @@ a:hover {
 
 .cart-layout-grid {
   display: grid;
-  grid-template-columns: 3fr 1fr;
-  gap: 40px;
+  grid-template-rows: auto;
+  gap: 0px;
 }
 
 .cart-item {
   display: flex;
   align-items: center;
   background-color: var(--color-card-bg);
-  padding: 1rem;
+  padding: 0.2rem;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
   border-left: 5px solid var(--color-accent);
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
 }
 
 .cart-item img {
-  width: 80px;
-  height: 80px;
+  width: 70px;
+  height: 70px;
   object-fit: cover;
-  border-radius: 4px;
+  border-radius: 2px;
   margin-right: 1rem;
 }
 
@@ -546,10 +558,10 @@ a:hover {
 }
 
 .quantity-controls {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 0 1.5rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 6px 10px;
+  border-radius: 6px;
+  gap: 10px;
 }
 
 .quantity-controls span {
@@ -680,69 +692,69 @@ a:hover {
 /* src/index.css - Estilização da Página de Cadastro/Login */
 
 .signup-page {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 70vh; /* Centraliza verticalmente */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 70vh; /* Centraliza verticalmente */
 }
 
 .signup-box {
-    background-color: var(--color-card-bg);
-    padding: 40px 30px;
-    border-radius: 8px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-    width: 100%;
-    max-width: 400px;
-    text-align: center;
+  background-color: var(--color-card-bg);
+  padding: 40px 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
 }
 
 .signup-title {
-    font-size: 2rem;
-    margin-bottom: 30px;
-    color: var(--color-accent);
+  font-size: 2rem;
+  margin-bottom: 30px;
+  color: var(--color-accent);
 }
 
 .signup-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
 .form-input {
-    padding: 15px 12px;
-    border: 1px solid #333;
-    border-radius: 4px;
-    background-color: var(--color-dark-bg);
-    color: var(--color-text-light);
-    font-size: 1rem;
-    transition: border-color 0.3s;
+  padding: 15px 12px;
+  border: 1px solid #333;
+  border-radius: 4px;
+  background-color: var(--color-dark-bg);
+  color: var(--color-text-light);
+  font-size: 1rem;
+  transition: border-color 0.3s;
 }
 
 .form-input:focus {
-    outline: none;
-    border-color: var(--color-accent);
+  outline: none;
+  border-color: var(--color-accent);
 }
 
 .signup-button {
-    margin-top: 15px;
-    /* Reutiliza o estilo btn-accent */
+  margin-top: 15px;
+  /* Reutiliza o estilo btn-accent */
 }
 
 .signup-footer-text {
-    margin-top: 25px;
-    font-size: 0.9rem;
-    color: var(--color-text-gray);
+  margin-top: 25px;
+  font-size: 0.9rem;
+  color: var(--color-text-gray);
 }
 
 .signup-link {
-    color: var(--color-accent);
-    font-weight: bold;
+  color: var(--color-accent);
+  font-weight: bold;
 }
 
 .error-message {
-    color: #ff5555; /* Cor de erro */
-    margin-bottom: 10px;
-    font-weight: bold;
+  color: #ff5555; /* Cor de erro */
+  margin-bottom: 10px;
+  font-weight: bold;
 }
 
 @media (max-width: 1024px) {

@@ -9,21 +9,7 @@ import ProductDetails from "./pages/ProductDetails";
 import { Toaster } from "react-hot-toast";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
-
-
-const Cart: React.FC = () => {
-  return (
-    <div
-      className="container"
-      style={{ padding: "2rem 0", textAlign: "center" }}
-    >
-      <h2 style={{ color: "var(--color-accent)" }}>Carrinho</h2>
-      <p style={{ color: "var(--color-text-light)" }}>
-        Seu carrinho está vazio.
-      </p>
-    </div>
-  );
-};
+import Cart from "./components/Cart";
 
 function App() {
   return (
