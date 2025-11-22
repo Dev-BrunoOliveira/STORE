@@ -6,8 +6,23 @@ import Lancamentos from "./pages/Lancamentos";
 import Hiphop from "./pages/Hiphop";
 import Camisetas from "./pages/Camisetas";
 import ProductDetails from "./pages/ProductDetails";
-import Cart from "./components/Cart";
-import { Toaster } from 'react-hot-toast';
+import { Toaster } from "react-hot-toast";
+import Signup from "./pages/Signup";
+import Login from "./pages/Login";
+
+const Cart: React.FC = () => {
+  return (
+    <div
+      className="container"
+      style={{ padding: "2rem 0", textAlign: "center" }}
+    >
+      <h2 style={{ color: "var(--color-accent)" }}>Carrinho</h2>
+      <p style={{ color: "var(--color-text-light)" }}>
+        Seu carrinho está vazio.
+      </p>
+    </div>
+  );
+};
 
 function App() {
   return (
@@ -15,17 +30,17 @@ function App() {
       <Layout>
         <Routes>
           <Route path="/" element={<Home />} />
-
           <Route path="/lancamentos" element={<Lancamentos />} />
-
           <Route path="/camisetas" element={<Camisetas />} />
-
           <Route path="/hiphop" element={<Hiphop />} />
-
+          <Route path="/cadastro" element={<Signup />} />
           <Route path="/produto/:slug" element={<ProductDetails />} />
-
           <Route path="/carrinho" element={<Cart />} />
+          <Route path="/cadastro" element={<Signup />} />
 
+          <Route path="/login" element={<Login />} />
+
+          {/* Rota 404 */}
           <Route
             path="*"
             element={
@@ -62,18 +77,17 @@ function App() {
           />
         </Routes>
       </Layout>
-<Toaster 
-          position="bottom-center" 
-          toastOptions={{
-              style: {
-                  background: 'var(--color-accent)', 
-                  color: 'var(--color-black)', 
-                  fontWeight: 'bold',
-              },
-          }}
+      <Toaster
+        position="bottom-center"
+        toastOptions={{
+          style: {
+            background: "var(--color-accent)",
+            color: "var(--color-black)",
+            fontWeight: "bold",
+          },
+        }}
       />
     </Router>
-    
   );
 }
 

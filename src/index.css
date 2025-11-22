@@ -677,6 +677,74 @@ a:hover {
   padding: 12px 0;
 }
 
+/* src/index.css - Estilização da Página de Cadastro/Login */
+
+.signup-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 70vh; /* Centraliza verticalmente */
+}
+
+.signup-box {
+    background-color: var(--color-card-bg);
+    padding: 40px 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.signup-title {
+    font-size: 2rem;
+    margin-bottom: 30px;
+    color: var(--color-accent);
+}
+
+.signup-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form-input {
+    padding: 15px 12px;
+    border: 1px solid #333;
+    border-radius: 4px;
+    background-color: var(--color-dark-bg);
+    color: var(--color-text-light);
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--color-accent);
+}
+
+.signup-button {
+    margin-top: 15px;
+    /* Reutiliza o estilo btn-accent */
+}
+
+.signup-footer-text {
+    margin-top: 25px;
+    font-size: 0.9rem;
+    color: var(--color-text-gray);
+}
+
+.signup-link {
+    color: var(--color-accent);
+    font-weight: bold;
+}
+
+.error-message {
+    color: #ff5555; /* Cor de erro */
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
 @media (max-width: 1024px) {
 }
 
