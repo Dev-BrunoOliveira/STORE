@@ -1,5 +1,8 @@
+// src/pages/Login.tsx
+
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast'; 
 
 const Login: React.FC = () => {
     const navigate = useNavigate();
@@ -10,29 +13,63 @@ const Login: React.FC = () => {
     });
 
     const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false); // Estado de carregamento
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
 
-        // 💡 Lógica de Login com a API (Futuro)
-        // Nesta fase, vamos apenas simular a validação:
-        if (formData.email === 'teste@laranjodina.com' && formData.password === '123456') {
-            alert('Login bem-sucedido! Redirecionando para a Home.');
-            navigate('/'); // Redireciona para a Home
-        } else {
-            setError('E-mail ou senha incorretos.');
+        if (!formData.email || !formData.password) {
+            setError('Preencha e-mail e senha.');
             return;
+        }
+        
+        setIsLoading(true);
+
+        try {
+            // Chamada à API Node.js/Express (rota de Login)
+            const response = await fetch('http://localhost:3001/api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                // Trata erros 401 (Credenciais inválidas) ou outros erros do servidor
+                setError(data.message || 'Erro ao tentar fazer login. Verifique suas credenciais.');
+                toast.error(data.message || 'Falha no login.');
+                return;
+            }
+
+            // Sucesso!
+            toast.success('Login bem-sucedido. Bem-vindo!', { icon: '🤘' });
+            
+            // 💡 1. Salva o JWT retornado no LocalStorage para manter o login
+            localStorage.setItem('userToken', data.token);
+            
+            // 💡 2. Redireciona para a Home
+            navigate('/'); 
+
+        } catch (error) {
+            console.error("Erro na requisição de login:", error);
+            setError('Não foi possível conectar ao servidor. Tente novamente.');
+            toast.error('Erro de conexão.');
+        } finally {
+            setIsLoading(false);
         }
     };
 
     return (
-        <div className="container signup-page"> {/* Reutiliza a classe de layout centralizado */}
-            <div className="signup-box"> {/* Reutiliza o box de estilização */}
+        <div className="container signup-page">
+            <div className="signup-box">
                 <h1 className="text-uppercase-black signup-title">FAÇA LOGIN</h1>
                 
                 <form className="signup-form" onSubmit={handleSubmit}>
@@ -59,8 +96,8 @@ const Login: React.FC = () => {
                         className="form-input"
                     />
                     
-                    <button type="submit" className="btn-accent signup-button">
-                        ENTRAR
+                    <button type="submit" className="btn-accent signup-button" disabled={isLoading}>
+                        {isLoading ? 'ENTRANDO...' : 'ENTRAR'}
                     </button>
                 </form>
 

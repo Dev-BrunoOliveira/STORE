@@ -10,6 +10,7 @@ import { Toaster } from "react-hot-toast";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 
+
 const Cart: React.FC = () => {
   return (
     <div

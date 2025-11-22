@@ -1,15 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { FiTrash2, FiMinusCircle, FiPlusCircle } from "react-icons/fi";
+// REMOVIDA: A importação de ícones que pode causar erros de runtime
+// import { FiTrash2, FiMinusCircle, FiPlusCircle } from "react-icons/fi"; 
 import { useCartStore, CartItem } from "./store/cartStore";
 
 const Cart: React.FC = () => {
   // Acessa o estado e as ações do carrinho (Zustand)
-  const items = useCartStore((state) => state.items);
+  const items = useCartStore((state) => state.items); // Ponto de leitura
   const removeItem = useCartStore((state) => state.removeItem);
   const updateQuantity = useCartStore((state) => state.updateQuantity);
 
-  // Funções de controle de quantidade
+  // ... (lógica de aumento/diminuição/cálculo) ...
   const handleIncrease = (item: CartItem) => {
     updateQuantity(item.product.id, item.size, item.quantity + 1);
   };
@@ -18,27 +19,23 @@ const Cart: React.FC = () => {
     updateQuantity(item.product.id, item.size, item.quantity - 1);
   };
 
-  // Calcula o total do carrinho
   const cartTotal = items.reduce(
     (total, item) => total + item.product.price * item.quantity,
     0
   );
 
   const formatPrice = (price: number) => {
-    return price.toLocaleString("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    });
+    return price.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
   };
 
-  // Caso o carrinho esteja vazio
+  // Se items.length > 0, renderiza a lista. Se não, a mensagem de vazio.
   if (items.length === 0) {
     return (
       <div className="cart-page empty-cart">
         <h1 className="text-uppercase-black cart-header-title">
           Seu Carrinho Está Vazio
         </h1>
-        <p className="empty-cart-message"></p>
+        <p className="empty-cart-message">Adicione umas peças para começar a rolê!</p>
         <Link to="/" className="btn-accent empty-cart-button">
           Ver Produtos
         </Link>
@@ -66,53 +63,35 @@ const Cart: React.FC = () => {
                 </p>
               </div>
 
-              {/* Controles de Quantidade */}
+              {/* Controles de Quantidade (CORREÇÃO: Usando texto simples) */}
               <div className="quantity-controls">
-                <FiMinusCircle
-                  size={24}
-                  className="icon-action"
+                <span
+                  className="icon-action text-control"
                   onClick={() => handleDecrease(item)}
-                />
+                >
+                  -
+                </span>
                 <span>{item.quantity}</span>
-                <FiPlusCircle
-                  size={24}
-                  className="icon-action"
+                <span
+                  className="icon-action text-control"
                   onClick={() => handleIncrease(item)}
-                />
+                >
+                  +
+                </span>
               </div>
 
-              {/* Botão de Remover */}
+              {/* Botão de Remover (CORREÇÃO: Usando texto simples) */}
               <button
                 onClick={() => removeItem(item.product.id, item.size)}
-                className="remove-button icon-action"
+                className="remove-button icon-action text-control"
               >
-                <FiTrash2 size={24} />
+                X
               </button>
             </div>
           ))}
         </div>
 
-        {/* Coluna de Resumo */}
-        <div className="cart-summary-box">
-          <h2 className="text-uppercase-black">Resumo</h2>
-
-          <div className="summary-line">
-            <span>Subtotal:</span>
-            <span>{formatPrice(cartTotal)}</span>
-          </div>
-
-          <div className="summary-line">
-            <span>Frete:</span>
-            <span className="free-shipping">Grátis</span>
-          </div>
-
-          <div className="summary-line summary-total">
-            <span>Total:</span>
-            <span>{formatPrice(cartTotal)}</span>
-          </div>
-
-          <button className="btn-accent btn-checkout">Finalizar Compra</button>
-        </div>
+        {/* ... (Coluna de Resumo) ... */}
       </div>
     </div>
   );
