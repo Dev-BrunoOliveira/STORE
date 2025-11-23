@@ -12,7 +12,7 @@ const FULL_CATALOG: ProductDetailsData[] = [
     id: 1,
     name: "Camiseta 2PAC Classic",
     price: 119.9,
-    imageUrl: "/img/2pac-modelo.png", 
+    imageUrl: "/img/2pac-modelo.jpg", 
     slug: "camiseta-2pac",
     description:
       "Camiseta 100% algodão com estampa serigráfica de alta qualidade. Perfeita para o estilo Hiphop.",
@@ -24,7 +24,7 @@ const FULL_CATALOG: ProductDetailsData[] = [
     id: 2,
     name: "Camiseta Fresh Prince",
     price: 119.9,
-    imageUrl: "/img/will-modelo.png",
+    imageUrl: "/img/will-modelo.jpg",
     slug: "camiseta-will",
     description:
       "Design exclusivo Fresh Prince, modelagem oversized. Algodão fio 30.",
@@ -36,7 +36,7 @@ const FULL_CATALOG: ProductDetailsData[] = [
     id: 3,
     name: "Camiseta Michael Jordan",
     price: 119.9,
-    imageUrl: "/img/jordan-modelo.png",
+    imageUrl: "/img/jordan-modelo.jpg",
     slug: "camiseta-jordan",
     description:
       "Camiseta em homenagem ao GOAT do basquete, estampa vibrante e durável.",
@@ -48,7 +48,7 @@ const FULL_CATALOG: ProductDetailsData[] = [
     id: 4,
     name: "Camiseta Leblon James",
     price: 119.9,
-    imageUrl: "/img/leblon-modelo.png", 
+    imageUrl: "/img/leblon-modelo.jpg", 
     slug: "camiseta-leblon",
     description:
       "Peça de lançamento com arte conceitual urbana. Edição limitada.",
@@ -60,7 +60,7 @@ const FULL_CATALOG: ProductDetailsData[] = [
     id: 5,
     name: "Camiseta Tyler The Creator",
     price: 119.9,
-    imageUrl: "/img/tyler-modelo.png",
+    imageUrl: "/img/tyler-modelo.jpg",
     slug: "tyler-the-creator",
     description: "Black edition Tyler The Creator, estilo único e autêntico.",
     colors: ["Preto", "Branca"],
@@ -71,7 +71,7 @@ const FULL_CATALOG: ProductDetailsData[] = [
     id: 6,
     name: "Camiseta Travis Scott",
     price: 119.9,
-    imageUrl: "/img/travis-modelo.png",
+    imageUrl: "/img/travis-modelo.jpg",
     slug: "travis-scott",
     description:
       "Estampa exclusiva Travis Scott, tecido premium e conforto garantido.",
@@ -83,7 +83,7 @@ const FULL_CATALOG: ProductDetailsData[] = [
     id: 7,
     name: "Camiseta Kendrick Lamar",
     price: 119.9,
-    imageUrl: "/img/kendrick-modelo.png",
+    imageUrl: "/img/kendrick-modelo.jpg",
     slug: "kendrick-lamar",
     description:
       "Estampa exclusiva Kendrick Lamar, tecido premium e conforto garantido.",
@@ -95,7 +95,7 @@ const FULL_CATALOG: ProductDetailsData[] = [
     id: 8,
     name: "Camiseta Kendrick Lamar Super Bowl",
     price: 119.9,
-    imageUrl: "/img/kendricksb-modelo.png",
+    imageUrl: "/img/kendricksb-modelo.jpg",
     slug: "kendrick-lamar",
     description:
       "Estampa exclusiva Kendrick Lamar, tecido premium e conforto garantido.",
@@ -107,7 +107,7 @@ const FULL_CATALOG: ProductDetailsData[] = [
     id: 9,
     name: "Camiseta Trem Bala",
     price: 119.9,
-    imageUrl: "/img/trembala-modelo.png",
+    imageUrl: "/img/trembala-modelo.jpg",
     slug: "trem-bala",
     description:
       "Camiseta com estampa inspiradora do Trem Bala de The Boys. Conforto e estilo em uma só peça.",
@@ -119,7 +119,7 @@ const FULL_CATALOG: ProductDetailsData[] = [
     id: 10,
     name: "Camiseta The Bear Yes Chef!",
     price: 119.9,
-    imageUrl: "/img/thebear-modelo.png",
+    imageUrl: "/img/thebear-modelo.jpg",
     slug: "the-bear-yes-chef",
     description:
       "Camiseta temática The Bear com a icônica frase 'Yes Chef!'. Conforto e estilo para os fãs da série.",
@@ -131,7 +131,7 @@ const FULL_CATALOG: ProductDetailsData[] = [
     id: 11,
     name: "Camiseta Agostinho Carrara",
     price: 119.9,
-    imageUrl: "/img/agostinho-modelo.png",
+    imageUrl: "/img/agostinho-modelo.jpg",
     slug: "agostinho-carrara",
     description:
       "Camiseta divertida do Agostinho Carrara, personagem icônico da TV brasileira. Perfeita para fãs de humor.",
@@ -143,7 +143,7 @@ const FULL_CATALOG: ProductDetailsData[] = [
     id: 12,
     name: "Camiseta Airton Senna",
     price: 119.9,
-    imageUrl: "/img/senna-modelo.png",
+    imageUrl: "/img/senna-modelo.jpg",
     slug: "airton-senna",
     description:
       "Camiseta em homenagem a Airton Senna, lenda do automobilismo brasileiro. Estilo e conforto para os fãs de velocidade.",
@@ -155,7 +155,7 @@ const FULL_CATALOG: ProductDetailsData[] = [
     id: 13,
     name: "Camiseta Travis",
     price: 119.9,
-    imageUrl: "/img/travis2-modelo.png",
+    imageUrl: "/img/travis2-modelo.jpg",
     slug: "travis-scott2",
     description:
       "Estampa exclusiva Travis Scott, tecido premium e conforto garantido.",
@@ -167,7 +167,7 @@ const FULL_CATALOG: ProductDetailsData[] = [
     id: 12,
     name: "Camiseta Laranjodina ",
     price: 119.9,
-    imageUrl: "/img/laranjodina-modelo.png",
+    imageUrl: "/img/laranjodina-modelo.jpg",
     slug: "laranjodina",
     description:
       "Camiseta exclusiva Laranjodina, estilo vibrante e autêntico.",
@@ -179,7 +179,7 @@ const FULL_CATALOG: ProductDetailsData[] = [
     id: 13,
     name: "Camiseta Breaking Bad ",
     price: 119.9,
-    imageUrl: "/img/bb-modelo.png",
+    imageUrl: "/img/bb-modelo.jpg",
     slug: "breaking-bad",
     description:
       "Camiseta temática Breaking Bad, perfeita para os fãs da série.",
