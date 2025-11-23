@@ -26,7 +26,7 @@ const ProductListing: React.FC<ProductListingProps> = ({
     const loadProducts = async () => {
       setIsLoading(true);
       try {
-        // 🛑 CORREÇÃO AQUI: Passamos um número muito grande (ex: 100) para garantir que todos os produtos sejam carregados.
+        
         const data = await fetchProducts(100, categorySlug); 
         setProducts(data);
       } catch (error) {

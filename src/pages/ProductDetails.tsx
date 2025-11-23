@@ -6,6 +6,7 @@ import { getProductBySlug } from "../services/productService";
 import { useCartStore } from "../components/store/cartStore";
 import toast from 'react-hot-toast';
 
+
 interface DetailedProduct extends Product {
   description: string;
   colors: string[];

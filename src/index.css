@@ -253,13 +253,13 @@ a:hover {
 }
 
 .product-card-price {
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   font-weight: 600;
   color: var(--color-text-light);
 }
 
 .price-old {
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   color: var(--color-text-gray);
   text-decoration: line-through;
 }
@@ -352,13 +352,13 @@ a:hover {
 
 .home-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(4, minmax(0,1fr));
+  gap: 1.2rem;
 }
 
 .category-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 1.5rem;
 }
 
@@ -778,6 +778,44 @@ a:hover {
   font-size: 0.75rem;
   color: var(--color-text-gray);
   margin-top: 15px;
+}
+
+.breadcrumbs-nav {
+    margin-bottom: 20px;
+    padding: 10px 0;
+    border-bottom: 1px solid #333;
+    font-size: 0.9rem;
+}
+
+.breadcrumbs-list {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+
+.breadcrumbs-item {
+    display: flex;
+    align-items: center;
+}
+
+.breadcrumbs-link {
+    color: var(--color-text-gray); 
+}
+
+.breadcrumbs-link:hover {
+    color: var(--color-accent);
+}
+
+.breadcrumbs-separator {
+    color: var(--color-text-gray);
+    opacity: 0.5;
+    margin: 0 8px; 
+}
+
+.breadcrumbs-current-label {
+    color: var(--color-text-light); 
+    font-weight: bold;
 }
 
 @media (max-width: 1024px) {
