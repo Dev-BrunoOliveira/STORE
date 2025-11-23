@@ -191,7 +191,7 @@ a:hover {
 
 .product-card {
   background-color: var(--color-card-bg);
-  padding: 4px;
+  padding: 1px;
   border-radius: 6px;
   transition: background-color 0.3s ease;
   display: block;
