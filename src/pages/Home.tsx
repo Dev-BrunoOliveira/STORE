@@ -11,11 +11,9 @@ const Home: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Função para buscar os produtos ao montar o componente
     const loadProducts = async () => {
       setIsLoading(true);
       try {
-        // Busca 4 produtos (os mais vendidos)
         const data = await fetchProducts(4, "mais-vendidos");
         setProducts(data);
       } catch (error) {
@@ -57,7 +55,6 @@ const Home: React.FC = () => {
           <Spinner />
         ) : (
           <div className="home-grid">
-            {/* Renderiza os produtos carregados do estado */}
             {products.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
@@ -65,7 +62,6 @@ const Home: React.FC = () => {
         )}
       </section>
 
-      {/* Seção de Categorias */}
       <section className="home-section">
         <div className="category-grid">
           <Link to="/camisetas" className="category-block">
