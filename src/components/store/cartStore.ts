@@ -21,6 +21,7 @@ interface CartState {
   addItem: (product: Product, size: string) => void;
   removeItem: (productId: number, size: string) => void;
   updateQuantity: (productId: number, size: string, quantity: number) => void;
+  clearCart: () => void;
 }
 
 export const useCartStore = create<CartState>()(
@@ -31,8 +32,7 @@ export const useCartStore = create<CartState>()(
       addItem: (product, size) =>
         set((state) => {
           const existingItem = state.items.find(
-            (item) =>
-              item.product.id === product.id && item.size === size
+            (item) => item.product.id === product.id && item.size === size
           );
 
           if (existingItem) {
@@ -52,8 +52,7 @@ export const useCartStore = create<CartState>()(
       removeItem: (productId, size) =>
         set((state) => ({
           items: state.items.filter(
-            (item) =>
-              !(item.product.id === productId && item.size === size)
+            (item) => !(item.product.id === productId && item.size === size)
           ),
         })),
 
@@ -62,8 +61,7 @@ export const useCartStore = create<CartState>()(
           if (quantity <= 0) {
             return {
               items: state.items.filter(
-                (item) =>
-                  !(item.product.id === productId && item.size === size)
+                (item) => !(item.product.id === productId && item.size === size)
               ),
             };
           }
@@ -75,9 +73,11 @@ export const useCartStore = create<CartState>()(
             ),
           };
         }),
+
+      clearCart: () => set({ items: [] }),
     }),
     {
-      name: "cart-storage", // nome do localStorage
+      name: "cart-storage",
     }
   )
 );

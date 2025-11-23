@@ -10,6 +10,7 @@ import { Toaster } from "react-hot-toast";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import Cart from "./components/Cart";
+import Checkout from './pages/Checkout';
 
 function App() {
   return (
@@ -24,8 +25,8 @@ function App() {
           <Route path="/produto/:slug" element={<ProductDetails />} />
           <Route path="/carrinho" element={<Cart />} />
           <Route path="/cadastro" element={<Signup />} />
-
           <Route path="/login" element={<Login />} />
+          <Route path="/checkout" element={<Checkout />} />
 
           {/* Rota 404 */}
           <Route

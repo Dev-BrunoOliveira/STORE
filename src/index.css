@@ -8,7 +8,6 @@
   --color-card-bg: #282828; /* Fundo de cards/blocos */
   --color-card-hover: #353535; /* Fundo de card no hover */
   --color-success: #4caf50; /* Verde para sucesso/frete grátis */
-
   --font-heading: "Rajdhani", sans-serif; /* Para títulos e banners */
   --font-body: "Montserrat", sans-serif; /* Para corpo, links e cards */
 }
@@ -619,6 +618,127 @@ a:hover {
   margin-top: 1.5rem;
   font-size: 1.1rem;
   padding: 15px 0;
+}
+
+.checkout-page {
+  padding-top: 40px;
+  padding-bottom: 80px;
+}
+
+.checkout-title {
+  font-size: 3rem;
+  margin-bottom: 40px;
+  text-align: center;
+  border-bottom: 2px solid var(--color-accent);
+  display: inline-block;
+  padding-bottom: 5px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.checkout-layout-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 40px;
+}
+
+.section-subtitle {
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 20px;
+  border-bottom: 1px solid #333;
+  padding-bottom: 5px;
+}
+
+.shipping-details-box {
+  background-color: var(--color-card-bg);
+  padding: 30px;
+  border-radius: 8px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.form-row {
+  display: flex;
+  gap: 15px;
+}
+
+.form-row input {
+  flex: 1;
+}
+
+.form-input,
+.select-input {
+  padding: 12px;
+  border: 1px solid #333;
+  border-radius: 4px;
+  background-color: var(--color-dark-bg);
+  color: var(--color-text-light);
+  font-size: 1rem;
+}
+.select-input {
+  width: 100%;
+  appearance: none;
+  background-image: url('data:image/svg+xml;utf8,<svg fill="white" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 10px top 50%;
+}
+
+.checkout-summary-box {
+  background-color: var(--color-black);
+  padding: 30px;
+  border-radius: 8px;
+  height: fit-content;
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  margin-bottom: 5px;
+}
+
+.order-totals {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid #333;
+}
+
+.total-line {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.total-final {
+  font-size: 1.4rem;
+  color: var(--color-accent);
+  margin-top: 15px;
+}
+
+.btn-finalize {
+  width: 100%;
+  margin-top: 25px;
+}
+
+.security-info {
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--color-text-gray);
+  margin-top: 15px;
+}
+
+@media (max-width: 1024px) {
+  .checkout-layout-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .spinner-container {
