@@ -187,6 +187,18 @@ const FULL_CATALOG: ProductDetailsData[] = [
     sizes: ["P", "M", "G", "GG"],
     category: ["lancamentos", "camisetas"],
   },
+  {
+    id: 14,
+    name: "Camiseta Polo Verde Musgo",
+    price: 119.9,
+    imageUrl: "/img/poloverde-modelo.jpg",
+    slug: "polo-verde-musgo",
+    description:
+      "Camiseta polo verde musgo, estilo clássico e confortável.",
+    colors: ["Verde Musgo"],
+    sizes: ["P", "M", "G", "GG"],
+    category: ["lancamentos", "camisetas"],
+  },
 ];
 
 /**

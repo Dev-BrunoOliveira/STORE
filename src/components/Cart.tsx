@@ -126,7 +126,7 @@ const Cart: React.FC = () => {
                 onClick={() => removeItem(item.product.id, item.size)}
                 className="remove-button icon-action"
               >
-                X
+                🗑
               </button>
             </div>
           ))}
