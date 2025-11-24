@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import Lancamentos from "./pages/Lancamentos";
 import Hiphop from "./pages/Hiphop";
 import Camisetas from "./pages/Camisetas";
+import Sobre from "./pages/Sobre";
 import ProductDetails from "./pages/ProductDetails";
 import { Toaster } from "react-hot-toast";
 import Signup from "./pages/Signup";
@@ -21,6 +22,7 @@ function App() {
           <Route path="/lancamentos" element={<Lancamentos />} />
           <Route path="/camisetas" element={<Camisetas />} />
           <Route path="/hiphop" element={<Hiphop />} />
+          <Route path="/sobre" element={<Sobre />} />
           <Route path="/cadastro" element={<Signup />} />
           <Route path="/produto/:slug" element={<ProductDetails />} />
           <Route path="/carrinho" element={<Cart />} />

@@ -73,6 +73,10 @@ const Home: React.FC = () => {
           <Link to="/hiphop" className="category-block">
             Hiphop
           </Link>
+           <Link to="/sobre" className="category-block">
+            Sobre
+          </Link>
+          
         </div>
       </section>
     </div>

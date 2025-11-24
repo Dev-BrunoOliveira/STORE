@@ -45,6 +45,9 @@ const Header: React.FC = () => {
           <Link to="/camisetas" className="nav-link">
             Camisetas
           </Link>
+          <Link to="/sobre" className="nav-link">
+            Sobre
+          </Link>
         </nav>
 
         <div className="header-icons">
@@ -92,6 +95,13 @@ const Header: React.FC = () => {
             onClick={handleMenuToggle}
           >
             Camisetas
+          </Link>
+          <Link
+            to="/sobre"
+            className="mobile-nav-link"
+            onClick={handleMenuToggle}
+          >
+            Sobre
           </Link>
 
           <div className="mobile-menu-actions">

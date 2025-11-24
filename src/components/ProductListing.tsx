@@ -2,10 +2,9 @@
 
 import React, { useState, useEffect } from "react";
 import ProductCard from "./ProductCard";
-import Spinner from "../components/Spinner"; // Certifique-se que o caminho está correto
+import Spinner from "../components/Spinner"; 
 import { fetchProducts } from "../services/productService";
 
-// Importações de Tipos
 import { Product } from "../services/productService"; 
 // NOTA: Se você ainda usa '../types/Product', mude para o tipo exportado do serviço para estabilidade.
 
