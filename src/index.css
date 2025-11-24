@@ -332,6 +332,12 @@ a:hover {
   background-size: cover;
   background-position: center;
   opacity: 0.9;
+  background-color: rgba(0, 0, 0, 0.8);
+  background-blend-mode: overlay;
+  filter: brightness(0.7);
+  z-index: 5;
+  pointer-events: none;
+  
 }
 
 .hero-content {
