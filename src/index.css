@@ -23,6 +23,7 @@ body {
   color: var(--color-text-light);
   font-family: var(--font-body);
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
 .container {
@@ -1167,6 +1168,52 @@ a:hover {
   font-weight: bold;
 }
 
+.mobile-back-button {
+    /* Esconde o botão por padrão em telas grandes */
+    display: none; 
+    
+    /* CORREÇÃO: Posicionamento sutil no topo */
+    position: absolute; /* Mude de 'fixed' para 'absolute' (ou 'fixed' e ajuste o 'top') */
+    top: 10px; /* Mais próximo do topo */
+    left: 10px; /* Mais próximo da esquerda */
+    z-index: 20; /* Acima da imagem */
+    
+    /* Estilo sutil (ajuste para ficar discreto) */
+    background-color: rgba(0, 0, 0, 0.6); /* Fundo preto semi-transparente */
+    color: var(--color-white); /* Cor Branca */
+    border: 1px solid rgba(255, 255, 255, 0.2); 
+    padding: 6px 10px;
+    font-size: 0.8rem;
+    border-radius: 5px; 
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3); 
+    
+    /* Flex para alinhar o ícone e o texto */
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    
+    transition: background-color 0.2s;
+}
+
+.mobile-back-button:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.back-arrow {
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+
+@media (max-width: 768px) {
+    .mobile-back-button {
+        display: flex; 
+        position: relative;
+        top: 38px;
+        left: auto; 
+    }
+}
+
 @media (max-width: 1024px) {
 }
 
@@ -1246,9 +1293,18 @@ a:hover {
   .category-grid {
     grid-template-columns: 1fr;
   }
-  .footer-section {
-    grid-template-columns: repeat(2, 1fr);
-  }
+
+
+    .footer-section {
+        grid-template-columns: 1fr; 
+        gap: 2rem; 
+        text-align: center; 
+    }
+    
+    
+    .container {
+        padding: 0 1rem;
+    }
   .cart-item {
     flex-wrap: wrap;
     gap: 1rem;

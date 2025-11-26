@@ -5,6 +5,7 @@ import { Product } from "../types/Product";
 import { getProductBySlug } from "../services/productService";
 import { useCartStore } from "../components/store/cartStore";
 import toast from 'react-hot-toast';
+import MobileBackButton from '../components/MobileBackButton';
 
 
 interface DetailedProduct extends Product {
@@ -96,9 +97,11 @@ const ProductDetails: React.FC = () => {
     );
   }
 
-  return (
-    <div className="container product-details-page">
-      {/* Layout de Duas Colunas */}
+return (
+  <div className="container product-details-page">
+    <MobileBackButton text="Ver Mais Produtos" />
+
+    {/* Layout de Duas Colunas */}
       <div className="product-layout-grid">
         <div className="product-gallery">
           <img
