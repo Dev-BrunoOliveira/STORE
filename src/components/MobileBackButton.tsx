@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 // Ícone de seta para a esquerda (Unicode)
-const BACK_ARROW = '←'; 
+const BACK_ARROW = '⬅'; 
 
 interface MobileBackButtonProps {
   // Título opcional para o botão (ex: "Voltar para Produtos")

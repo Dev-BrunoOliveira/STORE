@@ -1169,25 +1169,19 @@ a:hover {
 }
 
 .mobile-back-button {
-    /* Esconde o botão por padrão em telas grandes */
+    
     display: none; 
-    
-    /* CORREÇÃO: Posicionamento sutil no topo */
-    position: absolute; /* Mude de 'fixed' para 'absolute' (ou 'fixed' e ajuste o 'top') */
-    top: 10px; /* Mais próximo do topo */
-    left: 10px; /* Mais próximo da esquerda */
-    z-index: 20; /* Acima da imagem */
-    
-    /* Estilo sutil (ajuste para ficar discreto) */
-    background-color: rgba(0, 0, 0, 0.6); /* Fundo preto semi-transparente */
-    color: var(--color-white); /* Cor Branca */
+    position: absolute; 
+    top: 10px; 
+    left: 10px; 
+    z-index: 20; 
+    background-color: rgba(0, 0, 0, 0.6); 
+    color: var(--color-white); 
     border: 1px solid rgba(255, 255, 255, 0.2); 
     padding: 6px 10px;
     font-size: 0.8rem;
     border-radius: 5px; 
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3); 
-    
-    /* Flex para alinhar o ícone e o texto */
     display: flex;
     align-items: center;
     gap: 5px;
@@ -1204,12 +1198,96 @@ a:hover {
     line-height: 1;
 }
 
+.order-summary-review-box h3 {
+    font-size: 1.1rem;
+    color: var(--color-primary);
+    border-bottom: 2px solid var(--color-light-gray);
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+.summary-section {
+    padding: 15px 0;
+    margin-bottom: 15px;
+    border-bottom: 1px solid var(--color-light-gray);
+}
+
+.summary-section p {
+    font-size: 0.95rem;
+    margin-bottom: 5px;
+    color: var(--color-dark-gray);
+}
+
+.summary-section .btn-link {
+    background: none;
+    border: none;
+    color: var(--color-primary);
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0;
+    font-size: 0.9rem;
+    margin-top: 5px;
+}
+
+.items-list-review {
+    display: flex;
+    flex-direction: column;
+}
+
+.item-review {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.95rem;
+    padding: 3px 0;
+}
+
+.item-review .item-name {
+    color: var(--color-text);
+}
+
+.item-review .item-price {
+    font-weight: 500;
+}
+
+
+.total-review,
+.summary-details {
+    padding-top: 15px;
+    border-top: 1px solid var(--color-medium-gray);
+}
+
+.total-review .total-row,
+.summary-details .total-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+    font-size: 1rem;
+    color: var(--color-text);
+}
+
+.total-review .total-amount,
+.summary-details .total-amount {
+    font-size: 1.2rem;
+    color: var(--color-primary);
+    font-weight: bold;
+    border-top: 2px solid var(--color-primary);
+    margin-top: 10px;
+    padding-top: 10px !important;
+}
+
+
+@media (min-width: 769px) {
+    .checkout-layout-grid.review-step {
+       
+        grid-template-columns: 2fr 1fr; 
+    }
+}
 
 @media (max-width: 768px) {
     .mobile-back-button {
         display: flex; 
         position: relative;
-        top: 38px;
+        top: 0px;
         left: auto; 
     }
 }

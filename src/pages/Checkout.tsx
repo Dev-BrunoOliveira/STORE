@@ -3,190 +3,191 @@ import { useCartStore } from "../components/store/cartStore";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
-// IMPORTAÇÃO DOS NOVOS COMPONENTES (Para funcionar a renderização condicional)
-import CreditCardForm from "../components/CreditCardForm"; 
-import PixInstructions from "../components/PixInstructions"; 
-import MobileBackButton from '../components/MobileBackButton'; // Se for usado no Checkout
+import CreditCardForm from "../components/CreditCardForm";
+import PixInstructions from "../components/PixInstructions";
+import MobileBackButton from "../components/MobileBackButton";
 
 const Checkout: React.FC = () => {
-  const navigate = useNavigate();
-  const items = useCartStore((state) => state.items);
-  const clearCart = useCartStore((state) => state.clearCart);
-    
-  // 1. TODOS OS HOOKS E ESTADOS DEVEM FICAR AQUI, NO TOPO:
-  const [formData, setFormData] = useState({
-    cep: "",
-    address: "",
-    city: "",
-    state: "",
-    paymentMethod: "credit_card",
-  });
+  const navigate = useNavigate();
+  const items = useCartStore((state) => state.items);
+  const clearCart = useCartStore((state) => state.clearCart);
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    cep: "",
+    address: "",
+    city: "",
+    state: "",
+    paymentMethod: "credit_card",
+  });
 
-  const subtotal = items.reduce(
-    (total, item) => total + item.product.price * item.quantity,
-    0
-  );
-  const shippingCost = 0.0; // Frete grátis para simulação
-  const cartTotal = subtotal + shippingCost;
+  const [isLoading, setIsLoading] = useState(false);
 
-  const formatPrice = (price: number) =>
-    price.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+  const subtotal = items.reduce(
+    (total, item) => total + item.product.price * item.quantity,
+    0
+  );
+  const shippingCost = 0.0;
+  const cartTotal = subtotal + shippingCost;
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  const formatPrice = (price: number) =>
+    price.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
-  const handleFinalize = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-    if (items.length === 0) {
-      toast.error("Seu carrinho está vazio!");
-      return;
-    }
+  const handleFinalize = (e: React.FormEvent) => {
+    e.preventDefault();
 
-    if (
-      !formData.address ||
-      !formData.cep ||
-      !formData.city ||
-      !formData.state
-    ) {
-      toast.error("Preencha todos os campos de endereço!");
-      return;
-    }
+    if (items.length === 0) {
+      toast.error("Seu carrinho está vazio!");
+      return;
+    }
 
-    setIsLoading(true);
+    if (
+      !formData.address ||
+      !formData.cep ||
+      !formData.city ||
+      !formData.state
+    ) {
+      toast.error("Preencha todos os campos de endereço!");
+      return;
+    }
 
-    setTimeout(() => {
-      setIsLoading(false);
+    setIsLoading(true);
 
-      clearCart();
+    setTimeout(() => {
+      setIsLoading(false);
+      clearCart();
+      toast.success("Pedido Finalizado com Sucesso!", { icon: "✅" });
+      navigate("/");
+    }, 1500);
+  };
 
-      toast.success("Pedido Finalizado com Sucesso!", { icon: "✅" });
+  const renderPaymentComponent = () => {
+    const totalFormatted = formatPrice(cartTotal);
 
-      navigate("/");
-    }, 1500);
-  };
+    if (formData.paymentMethod === "credit_card") {
+      return <CreditCardForm />;
+    }
+    if (formData.paymentMethod === "pix") {
+      return <PixInstructions total={totalFormatted} />;
+    }
 
-  // 2. FUNÇÃO DE RENDERIZAÇÃO CONDICIONAL
-  const renderPaymentComponent = () => {
-    const totalFormatted = formatPrice(cartTotal);
+    return <p>Selecione um método de pagamento.</p>;
+  };
 
-    if (formData.paymentMethod === "credit_card") {
-      return <CreditCardForm />;
-    }
-    if (formData.paymentMethod === "pix") {
-      return <PixInstructions total={totalFormatted} />;
-    }
-   
-    return <p>Selecione um método de pagamento.</p>;
-  };
+  return (
+    <div className="container checkout-page">
+      <MobileBackButton text="Voltar ao Carrinho" />
 
+      <h1 className="text-uppercase-black checkout-title">
+         Finalizar Compra
+      </h1>
 
-  // 3. O RETURN PRINCIPAL DEVE FICAR NO FINAL
-  return ( 
-    <div className="container checkout-page">
-        {/* 🛑 Botão de Voltar para Mobile */}
-        <MobileBackButton text="Voltar ao Carrinho" /> 
-        
-        {/* Aqui você pode incluir o bloco <h1 className="page-title">Seu Carrinho</h1> se precisar */}
-           {" "}
-      <h1 className="text-uppercase-black checkout-title">
-                Checkout: Finalizar Compra      {" "}
-      </h1>
-           {" "}
-      <form onSubmit={handleFinalize} className="checkout-layout-grid">
-                {/* COLUNA 1: DADOS DE ENVIO E PAGAMENTO */}       {" "}
-        <div className="shipping-details-box">
-                    <h2 className="section-subtitle">1. Endereço de Envio</h2> 
-                 {" "}
-          <div className="form-group">
-                       {" "}
-            <input
-              type="text"
-              name="cep"
-              placeholder="CEP"
-              required
-              onChange={handleChange}
-              className="form-input"
-              value={formData.cep}
-            />
-                       {" "}
-            <input
-              type="text"
-              name="address"
-              placeholder="Endereço (Rua, Número)"
-              required
-              onChange={handleChange}
-              className="form-input"
-              value={formData.address}
-            />
-                       {" "}
-            <div className="form-row">
-                           {" "}
-              <input
-                type="text"
-                name="city"
-                placeholder="Cidade"
-                required
-                onChange={handleChange}
-                className="form-input"
-                value={formData.city}
-              />
-                           {" "}
-              <input
-                type="text"
-                name="state"
-                placeholder="Estado (Ex: SP)"
-                required
-                maxLength={2}
-                onChange={handleChange}
-                className="form-input"
-                value={formData.state}
-              />
-                         {" "}
-            </div>
-                     {" "}
-          </div>
-                    <h2 className="section-subtitle">2. Pagamento</h2>         {" "}
-          <select
-            name="paymentMethod"
-            onChange={handleChange}
-            className="form-input select-input"
-            value={formData.paymentMethod}
-          >
-                        <option value="credit_card">Cartão de Crédito</option> 
-                      <option value="pix">Pix</option>           {" "}
-          </select>
-          {/* 3. Renderização Condicional do Formulário de Pagamento */}
-          <div className="payment-method-details">
-            {renderPaymentComponent()}
-          </div>
-                 {" "}
-        </div>
-                {/* COLUNA 2: RESUMO DO PEDIDO E BOTÃO */}       {" "}
-        <div className="checkout-summary-box">
-                    <h2 className="section-subtitle">3. Resumo do Pedido</h2>
-          {/* ... (Resumo do pedido e totais) ... */}         {" "}
-          <button
-            type="submit"
-            className="btn-accent btn-finalize"
-            disabled={isLoading}
-          >
-                        {isLoading ? "FINALIZANDO..." : "FINALIZAR COMPRA"}     
-               {" "}
-          </button>
-                   {" "}
-          <p className="security-info">🔒 Seus dados estão seguros.</p>       {" "}
-        </div>
-             {" "}
-      </form>
-         {" "}
-    </div>
-  );
+      <form onSubmit={handleFinalize} className="checkout-layout-grid">
+        <div className="shipping-details-box">
+          <h2 className="section-subtitle">1. Endereço de Envio</h2>
+          <div className="form-group">
+            <input
+              type="text"
+              name="cep"
+              placeholder="CEP"
+              required
+              onChange={handleChange}
+              className="form-input"
+              value={formData.cep}
+            />
+            <input
+              type="text"
+              name="address"
+              placeholder="Endereço (Rua, Número)"
+              required
+              onChange={handleChange}
+              className="form-input"
+              value={formData.address}
+            />
+            <div className="form-row">
+              <input
+                type="text"
+                name="city"
+                placeholder="Cidade"
+                required
+                onChange={handleChange}
+                className="form-input"
+                value={formData.city}
+              />
+              <input
+                type="text"
+                name="state"
+                placeholder="Estado (Ex: SP)"
+                required
+                maxLength={2}
+                onChange={handleChange}
+                className="form-input"
+                value={formData.state}
+              />
+            </div>
+          </div>
+
+          <h2 className="section-subtitle">2. Pagamento</h2>
+          <select
+            name="paymentMethod"
+            onChange={handleChange}
+            className="form-input select-input"
+            value={formData.paymentMethod}
+          >
+            <option value="credit_card">Cartão de Crédito</option>
+            <option value="pix">Pix</option>
+          </select>
+
+          <div className="payment-method-details">
+            {renderPaymentComponent()}
+          </div>
+        </div>
+
+        <div className="checkout-summary-box">
+          <h2 className="section-subtitle">3. Resumo do Pedido</h2>
+
+          {items.map((item) => (
+            <div key={item.product.id + item.size} className="summary-item">
+              <span className="item-name">
+                {item.product.name} ({item.size})
+              </span>
+              <span className="item-price">
+                {item.quantity} x {formatPrice(item.product.price)}
+              </span>
+            </div>
+          ))}
+          <div className="order-totals">
+            <div className="total-line">
+              <span>Subtotal:</span>
+              <span>{formatPrice(subtotal)}</span>
+            </div>
+            <div className="total-line">
+              <span>Frete:</span>
+              <span className="free-shipping">GRÁTIS</span>
+            </div>
+            <div className="total-line total-final">
+              <span>Total a Pagar:</span>
+              <span>{formatPrice(cartTotal)}</span>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            className="btn-accent btn-finalize"
+            disabled={isLoading}
+          >
+            {isLoading ? "FINALIZANDO..." : "FINALIZAR COMPRA"}
+          </button>
+          <p className="security-info">🔒 Seus dados estão seguros.</p>
+        </div>
+      </form>
+    </div>
+  );
 };
 
 export default Checkout;
