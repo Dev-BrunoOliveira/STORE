@@ -95,8 +95,8 @@ const FULL_CATALOG: ProductDetailsData[] = [
     id: 8,
     name: "Camiseta Kendrick Lamar Super Bowl",
     price: 119.9,
-    imageUrl: "/img/kendricksb-modelo.jpg",
-    slug: "kendrick-lamar",
+    imageUrl: "/img/superbowl.jpg",
+    slug: "superbowl",
     description:
       "Estampa exclusiva Kendrick Lamar, tecido premium e conforto garantido.",
     colors: ["Preto"],
@@ -186,6 +186,18 @@ const FULL_CATALOG: ProductDetailsData[] = [
     colors: ["Preto"],
     sizes: ["P", "M", "G", "GG"],
     category: ["cultura negra", "camisetas"],
+  },
+   {
+    id: 14,
+    name: "Camiseta Breaking Bad Novo Mexico",
+    price: 119.9,
+    imageUrl: "/img/breakingbad-modelo.jpg", 
+    slug: "camiseta-breakingbad2",
+    description:
+      "Peça de lançamento com arte conceitual urbana. Edição limitada.",
+    colors: ["Branca"],
+    sizes: ["P", "M", "G", "GG"],
+    category: ["lancamentos", "camisetas"],
   },
 ];
 
