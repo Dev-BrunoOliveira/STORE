@@ -88,7 +88,7 @@ const ProductDetails: React.FC = () => {
         </h1>
         <p className="error-message">
           Verifique a URL ou volte à{" "}
-          <Link to="/" style={{ color: "var(--color-accent)" }}>
+          <Link to="/" style={{ color: "var(--color-white)" }}>
             Home
           </Link>
           .
