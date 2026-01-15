@@ -12,7 +12,7 @@ const Footer: React.FC = () => {
             <h4 className="text-uppercase-black">Institucional</h4>
             <ul>
               <li>
-                <Link to="/sobre">A Laranjodina</Link>
+                <Link to="/sobre">O Laranjodina</Link>
               </li>
               <li>
                 <Link to="/politica-privacidade">Política de Privacidade</Link>
