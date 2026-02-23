@@ -32,7 +32,7 @@ const Home: React.FC = () => {
       <section className="home-section home-hero">
         <div
           className="home-hero-bg"
-          style={{ backgroundImage: "url('/img/banner.jpg')" }}
+          style={{ backgroundImage: "url('/img/banner.webp')" }}
         ></div>
 
         <div className="hero-content">
