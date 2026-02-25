@@ -1,16 +1,14 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import { FiTrash2, FiMinusCircle, FiPlusCircle } from "react-icons/fi";
 import { useCartStore, CartItem } from "../components/store/cartStore";
 
 const Cart: React.FC = () => {
   const navigate = useNavigate();
 
-  // 2. NOVOS ESTADOS PARA FRETE
   const [cep, setCep] = useState("");
   const [shipping, setShipping] = useState<number | null>(null);
-  const [isCalculating, setIsCalculating] = useState(false);
+  const [, setIsLoading] = useState(false);
 
   const items = useCartStore((state) => state.items);
   const removeItem = useCartStore((state) => state.removeItem);
@@ -18,7 +16,7 @@ const Cart: React.FC = () => {
 
   const subtotal = items.reduce(
     (total, item) => total + item.product.price * item.quantity,
-    0
+    0,
   );
 
   const cartTotal = subtotal + (shipping === null ? 0 : shipping);
@@ -40,31 +38,26 @@ const Cart: React.FC = () => {
 
   const handleCalculateShipping = (e: React.FormEvent) => {
     e.preventDefault();
-    
-   
-    const cepClean = cep.replace(/\D/g, ''); 
 
-    if (cepClean.length !== 8) { 
-        setShipping(null);
-        alert('CEP inválido. Digite 8 dígitos.');
-        return;
+    const cepClean = cep.replace(/\D/g, "");
+
+    if (cepClean.length !== 8) {
+      setShipping(null);
+      alert("CEP inválido. Digite 8 dígitos.");
+      return;
     }
 
-    setIsCalculating(true);
+    setIsLoading(true);
 
     setTimeout(() => {
-      setIsCalculating(false);
+      setIsLoading(false);
 
-      // Lógica de MOCK (Exemplo: Frete Grátis acima de R$300)
+      // Lógica de MOCK (Frete Grátis acima de R$300)
       if (subtotal >= 300) {
         setShipping(0);
-      }
-      // Frete Alto
-      else if (cepClean.startsWith("0") || cepClean.startsWith("1")) {
+      } else if (cepClean.startsWith("0") || cepClean.startsWith("1")) {
         setShipping(15.0);
-      }
-      // Frete Normal
-      else {
+      } else {
         setShipping(35.0);
       }
     }, 800);
