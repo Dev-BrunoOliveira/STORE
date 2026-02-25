@@ -31,7 +31,6 @@ const Login: React.FC = () => {
         setIsLoading(true);
 
         try {
-            // Chamada à API Node.js/Express (rota de Login)
             const response = await fetch('http://localhost:3001/api/auth/login', {
                 method: 'POST',
                 headers: {
@@ -43,19 +42,19 @@ const Login: React.FC = () => {
             const data = await response.json();
 
             if (!response.ok) {
-                // Trata erros 401 (Credenciais inválidas) ou outros erros do servidor
+                
                 setError(data.message || 'Erro ao tentar fazer login. Verifique suas credenciais.');
                 toast.error(data.message || 'Falha no login.');
                 return;
             }
 
-            // Sucesso!
+         
             toast.success('Login bem-sucedido. Bem-vindo!', { icon: '🤘' });
             
-            // 💡 1. Salva o JWT retornado no LocalStorage para manter o login
+           
             localStorage.setItem('userToken', data.token);
             
-            // 💡 2. Redireciona para a Home
+          
             navigate('/'); 
 
         } catch (error) {
