@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "dev": "concurrently --names \"API,STORE\" --prefix-colors \"yellow,cyan\" \"npm --prefix laranjodina-api run dev\" \"npm --prefix laranjodina-store start\"",
+    "dev:api": "npm --prefix laranjodina-api run dev",
+    "dev:store": "npm --prefix laranjodina-store start"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}

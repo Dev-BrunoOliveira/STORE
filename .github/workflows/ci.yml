@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  api:
+    name: API — build & type-check
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: laranjodina-api
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: laranjodina-api/package-lock.json
+
+      - run: npm ci
+      - run: npx tsc --noEmit
+      - run: npm run build
+
+  store:
+    name: Store — build & type-check
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: laranjodina-store
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: laranjodina-store/package-lock.json
+
+      - run: npm ci
+      - run: npx tsc --noEmit
+      - run: npm run build
+        env:
+          CI: false
+          REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
