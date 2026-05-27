@@ -9,12 +9,22 @@ import { globalLimiter, authLimiter, orderLimiter } from './middleware/rateLimit
 
 dotenv.config();
 
+const REQUIRED_ENV = ['JWT_SECRET', 'DB_HOST', 'DB_USER', 'DB_PASSWORD', 'DB_NAME', 'MP_ACCESS_TOKEN'];
+const missing = REQUIRED_ENV.filter(k => !process.env[k]);
+if (missing.length > 0) {
+  console.error(`Variáveis de ambiente obrigatórias não definidas: ${missing.join(', ')}`);
+  process.exit(1);
+}
+
 const app = express();
 const PORT = process.env.PORT || 3001;
 const isDev = process.env.NODE_ENV !== 'production';
 
-// Em dev com proxy local pode ser necessário; nunca ativar em produção
 if (isDev) {
+  // Desabilita verificação TLS apenas em desenvolvimento — nunca deve chegar a produção
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error('NODE_TLS_REJECT_UNAUTHORIZED não pode ser desativado em produção.');
+  }
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 }
 

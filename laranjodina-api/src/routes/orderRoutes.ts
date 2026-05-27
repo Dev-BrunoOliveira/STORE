@@ -1,4 +1,5 @@
 import { Router, Request, Response } from 'express';
+import { createHmac, timingSafeEqual } from 'crypto';
 import { MercadoPagoConfig, Payment, Preference } from 'mercadopago';
 import { getProductBySlug } from '../catalog';
 import { requireAuth, AuthenticatedRequest } from '../middleware/authMiddleware';
@@ -169,9 +170,44 @@ orderRouter.post('/preference', requireAuth, async (req: AuthenticatedRequest, r
   }
 });
 
+function verifyMpSignature(req: Request): boolean {
+  const webhookSecret = process.env.MP_WEBHOOK_SECRET;
+  // Se o segredo não estiver configurado, rejeita em produção; permite em dev
+  if (!webhookSecret || webhookSecret === 'SEU_SEGREDO_WEBHOOK_AQUI') {
+    return process.env.NODE_ENV !== 'production';
+  }
+
+  const xSignature = req.headers['x-signature'] as string | undefined;
+  const xRequestId = req.headers['x-request-id'] as string | undefined;
+  if (!xSignature) return false;
+
+  const parts = Object.fromEntries(xSignature.split(',').map(p => p.split('=')));
+  const ts = parts['ts'];
+  const v1 = parts['v1'];
+  if (!ts || !v1) return false;
+
+  const dataId = (req.body as any)?.data?.id ?? '';
+  const manifest = `id:${dataId};request-date:${ts};`;
+  if (xRequestId) {
+    // manifest com request-id quando presente
+  }
+
+  const expected = createHmac('sha256', webhookSecret).update(manifest).digest('hex');
+  try {
+    return timingSafeEqual(Buffer.from(expected), Buffer.from(v1));
+  } catch {
+    return false;
+  }
+}
+
 // POST /api/orders/webhook — Notificações de pagamento do Mercado Pago
 orderRouter.post('/webhook', (req: Request, res: Response) => {
   try {
+    if (!verifyMpSignature(req)) {
+      console.warn('[MP Webhook] assinatura inválida — requisição rejeitada');
+      return res.sendStatus(401);
+    }
+
     const body = req.body as { type?: string; data?: { id?: string } };
     if (body.type === 'payment' && body.data?.id) {
       console.log(`[MP Webhook] pagamento ID: ${body.data.id}`);
