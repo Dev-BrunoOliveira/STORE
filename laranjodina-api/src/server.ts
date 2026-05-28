@@ -21,10 +21,6 @@ const PORT = process.env.PORT || 3001;
 const isDev = process.env.NODE_ENV !== 'production';
 
 if (isDev) {
-  // Desabilita verificação TLS apenas em desenvolvimento — nunca deve chegar a produção
-  if (process.env.NODE_ENV === 'production') {
-    throw new Error('NODE_TLS_REJECT_UNAUTHORIZED não pode ser desativado em produção.');
-  }
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 }
 

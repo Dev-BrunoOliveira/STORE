@@ -178,7 +178,6 @@ function verifyMpSignature(req: Request): boolean {
   }
 
   const xSignature = req.headers['x-signature'] as string | undefined;
-  const xRequestId = req.headers['x-request-id'] as string | undefined;
   if (!xSignature) return false;
 
   const parts = Object.fromEntries(xSignature.split(',').map(p => p.split('=')));
@@ -188,9 +187,6 @@ function verifyMpSignature(req: Request): boolean {
 
   const dataId = (req.body as any)?.data?.id ?? '';
   const manifest = `id:${dataId};request-date:${ts};`;
-  if (xRequestId) {
-    // manifest com request-id quando presente
-  }
 
   const expected = createHmac('sha256', webhookSecret).update(manifest).digest('hex');
   try {
