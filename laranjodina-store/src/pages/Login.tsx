@@ -99,9 +99,14 @@ const Login: React.FC = () => {
                     </button>
                 </form>
 
-                <p className="signup-footer-text">
-                    Não tem conta? <Link to="/cadastro" className="signup-link">Crie uma agora</Link>
-                </p>
+                <div style={{display: 'flex', justifyContent: 'space-between', marginTop: '1.5rem'}}>
+                    <p className="signup-footer-text" style={{marginTop: 0}}>
+                        Não tem conta? <Link to="/cadastro" className="signup-link">Crie uma</Link>
+                    </p>
+                    <p className="signup-footer-text" style={{marginTop: 0}}>
+                        <Link to="/esqueci-minha-senha" style={{color: 'var(--text-muted)', textDecoration: 'underline'}}>Esqueci minha senha</Link>
+                    </p>
+                </div>
             </div>
         </div>
     );

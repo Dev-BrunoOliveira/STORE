@@ -6,6 +6,7 @@ import { getProductBySlug } from "../services/productService";
 import { useCartStore } from "../components/store/cartStore";
 import toast from 'react-hot-toast';
 import MobileBackButton from '../components/MobileBackButton';
+import ReviewSection from '../components/ReviewSection';
 
 
 interface DetailedProduct extends Product {
@@ -159,6 +160,8 @@ return (
             </h3>
             <p className="description-text">{product.description}</p>
           </div>
+
+          <ReviewSection productSlug={product.slug} />
         </div>
       </div>
     </div>

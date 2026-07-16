@@ -4,6 +4,8 @@ import { Router, Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { query } from '../db';
+import crypto from 'crypto';
+import nodemailer from 'nodemailer';
 import { db } from '../config/firebase';
 import { ref, set, push, serverTimestamp } from 'firebase/database';
 
@@ -133,6 +135,76 @@ authRouter.post('/login', async (req: Request, res: Response) => {
   } catch (error: any) {
     console.error('Erro no login:', error.message);
     return res.status(500).json({ message: 'Erro interno do servidor.' });
+  }
+});
+
+// =============================
+// ROTA DE ESQUECI A SENHA /forgot-password
+// =============================
+authRouter.post('/forgot-password', async (req: Request, res: Response) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ message: 'E-mail é obrigatório.' });
+
+  try {
+    const users = await query<any[]>('SELECT id FROM users WHERE email = ?', [email.toLowerCase()]);
+    if (users.length === 0) {
+      // Retorna sucesso igual para não vazar emails cadastrados
+      return res.status(200).json({ message: 'Se o e-mail existir, você receberá um link de recuperação.' });
+    }
+
+    const token = crypto.randomBytes(32).toString('hex');
+    const expires = Date.now() + 3600000; // 1 hora
+    
+    await query('UPDATE users SET reset_token = ?, reset_token_expires = ? WHERE email = ?', [token, expires, email.toLowerCase()]);
+
+    const resetLink = `http://localhost:3000/reset-password?token=${token}&email=${email.toLowerCase()}`;
+    
+    // MOCK EMAIL SENDING
+    console.log('\n\n======================================================');
+    console.log('📧 MOCK EMAIL ENVIADO PARA:', email.toLowerCase());
+    console.log('LINK DE RECUPERAÇÃO:', resetLink);
+    console.log('======================================================\n\n');
+
+    return res.status(200).json({ message: 'Se o e-mail existir, você receberá um link de recuperação.' });
+  } catch (error) {
+    console.error('Erro no forgot-password:', error);
+    return res.status(500).json({ message: 'Erro interno.' });
+  }
+});
+
+// =============================
+// ROTA DE RESET DE SENHA /reset-password
+// =============================
+authRouter.post('/reset-password', async (req: Request, res: Response) => {
+  const { email, token, newPassword } = req.body;
+
+  if (!email || !token || !newPassword) {
+    return res.status(400).json({ message: 'Dados inválidos.' });
+  }
+
+  const passwordError = validatePassword(newPassword);
+  if (passwordError) {
+    return res.status(400).json({ message: passwordError });
+  }
+
+  try {
+    const users = await query<any[]>('SELECT id, reset_token_expires FROM users WHERE email = ? AND reset_token = ?', [email.toLowerCase(), token]);
+    
+    if (users.length === 0) {
+      return res.status(400).json({ message: 'Token inválido ou expirado.' });
+    }
+
+    if (Date.now() > users[0].reset_token_expires) {
+      return res.status(400).json({ message: 'O link de recuperação expirou. Solicite um novo.' });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 12);
+    await query('UPDATE users SET password = ?, reset_token = NULL, reset_token_expires = NULL WHERE email = ?', [hashedPassword, email.toLowerCase()]);
+
+    return res.status(200).json({ message: 'Senha atualizada com sucesso! Você já pode fazer login.' });
+  } catch (error) {
+    console.error('Erro no reset-password:', error);
+    return res.status(500).json({ message: 'Erro interno.' });
   }
 });
 

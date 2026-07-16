@@ -14,11 +14,15 @@ import Cart from "./components/Cart";
 import Checkout from './pages/Checkout';
 import OrderSuccess from './pages/OrderSuccess';
 import OrderPending from './pages/OrderPending';
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import MinhaConta from './pages/MinhaConta';
+import CartSync from './components/CartSync';
 
 function App() {
   return (
     <Router>
+      <CartSync />
       <Layout>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -71,6 +75,8 @@ function App() {
               </div>
             }
           />
+          <Route path="/esqueci-minha-senha" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
         </Routes>
       </Layout>
       <Toaster

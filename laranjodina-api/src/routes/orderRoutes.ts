@@ -3,6 +3,7 @@ import { createHmac, timingSafeEqual } from 'crypto';
 import { MercadoPagoConfig, Payment, Preference } from 'mercadopago';
 import { getProductBySlug } from '../catalog';
 import { requireAuth, AuthenticatedRequest } from '../middleware/authMiddleware';
+import { query } from '../db';
 
 const orderRouter = Router();
 
@@ -92,10 +93,15 @@ orderRouter.post('/pix', requireAuth, async (req: AuthenticatedRequest, res: Res
     const firstName = nameParts[0];
     const lastName = nameParts.slice(1).join(' ') || firstName;
 
+    // Criar o pedido no banco
+    const orderResult: any = await query('INSERT INTO orders (user_id, total, status) VALUES (?, ?, ?)', [req.user!.id, total, 'pending']);
+    const orderId = orderResult.insertId.toString();
+
     const result = await payment.create({
       body: {
         transaction_amount: total,
         payment_method_id: 'pix',
+        external_reference: orderId,
         payer: {
           email: payer.email,
           first_name: firstName,
@@ -139,8 +145,12 @@ orderRouter.post('/preference', requireAuth, async (req: AuthenticatedRequest, r
     const client = getMpClient();
     const preference = new Preference(client);
 
+    const orderResult: any = await query('INSERT INTO orders (user_id, total, status) VALUES (?, ?, ?)', [req.user!.id, calcTotal(validatedItems), 'pending']);
+    const orderId = orderResult.insertId.toString();
+
     const result = await preference.create({
       body: {
+        external_reference: orderId,
         items: validatedItems.map(i => ({
           id: i.product.slug,
           title: `${i.product.name} (${i.size})`,
@@ -197,7 +207,7 @@ function verifyMpSignature(req: Request): boolean {
 }
 
 // POST /api/orders/webhook — Notificações de pagamento do Mercado Pago
-orderRouter.post('/webhook', (req: Request, res: Response) => {
+orderRouter.post('/webhook', async (req: Request, res: Response) => {
   try {
     if (!verifyMpSignature(req)) {
       console.warn('[MP Webhook] assinatura inválida — requisição rejeitada');
@@ -207,7 +217,21 @@ orderRouter.post('/webhook', (req: Request, res: Response) => {
     const body = req.body as { type?: string; data?: { id?: string } };
     if (body.type === 'payment' && body.data?.id) {
       console.log(`[MP Webhook] pagamento ID: ${body.data.id}`);
-      // TODO: buscar pagamento na API do MP e atualizar pedido no banco
+      const client = getMpClient();
+      const paymentClient = new Payment(client);
+      const paymentInfo = await paymentClient.get({ id: body.data.id });
+
+      const orderId = paymentInfo.external_reference;
+      const status = paymentInfo.status;
+
+      if (orderId) {
+        let dbStatus = 'pending';
+        if (status === 'approved') dbStatus = 'paid';
+        else if (status === 'rejected' || status === 'cancelled') dbStatus = 'cancelled';
+
+        await query('UPDATE orders SET status = ?, payment_id = ? WHERE id = ?', [dbStatus, body.data.id, orderId]);
+        console.log(`[MP Webhook] Pedido ${orderId} atualizado para ${dbStatus}`);
+      }
     }
     res.sendStatus(200);
   } catch (error) {
