@@ -4,6 +4,8 @@ import { Router, Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { query } from '../db';
+import { db } from '../config/firebase';
+import { ref, set, push, serverTimestamp } from 'firebase/database';
 
 const authRouter = Router();
 
@@ -27,7 +29,7 @@ function validatePassword(password: string): string | null {
 // ROTA DE CADASTRO /signup
 // =============================
 authRouter.post('/signup', async (req: Request, res: Response) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, phone } = req.body;
 
   if (!name || !email || !password) {
     return res.status(400).json({ message: 'Todos os campos são obrigatórios.' });
@@ -56,9 +58,20 @@ authRouter.post('/signup', async (req: Request, res: Response) => {
 
     const hashedPassword = await bcrypt.hash(password, 12);
     const result: any = await query(
-      'INSERT INTO users (name, email, password) VALUES (?, ?, ?)',
-      [name.trim(), email.toLowerCase(), hashedPassword]
+      'INSERT INTO users (name, email, password, phone) VALUES (?, ?, ?, ?)',
+      [name.trim(), email.toLowerCase(), hashedPassword, phone ? phone.trim() : null]
     );
+
+    try {
+      await set(ref(db, `users/${result.insertId}`), {
+        name: name.trim(),
+        email: email.toLowerCase(),
+        phone: phone ? phone.trim() : null,
+        createdAt: serverTimestamp()
+      });
+    } catch (fbError) {
+      console.error('Erro ao salvar usuário no Firebase:', fbError);
+    }
 
     const token = jwt.sign({ id: result.insertId, email: email.toLowerCase() }, secret, { expiresIn: '1d' });
 
@@ -102,6 +115,15 @@ authRouter.post('/login', async (req: Request, res: Response) => {
     }
 
     const token = jwt.sign({ id: user.id, email: user.email }, secret, { expiresIn: '1d' });
+
+    try {
+      await push(ref(db, `login_events/${user.id}`), {
+        email: user.email,
+        timestamp: serverTimestamp()
+      });
+    } catch (fbError) {
+      console.error('Erro ao registrar login no Firebase:', fbError);
+    }
 
     return res.status(200).json({
       message: 'Login bem-sucedido.',
