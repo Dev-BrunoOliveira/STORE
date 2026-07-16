@@ -13,6 +13,7 @@ const Signup: React.FC = () => {
     const [formData, setFormData] = useState({
         name: '',
         email: '',
+        phone: '',
         password: '',
         confirmPassword: '',
     });
@@ -51,6 +52,7 @@ const Signup: React.FC = () => {
                 body: JSON.stringify({
                     name: formData.name,
                     email: formData.email,
+                    phone: formData.phone,
                     password: formData.password
                 })
             });
@@ -103,6 +105,15 @@ const Signup: React.FC = () => {
                         value={formData.email}
                         onChange={handleChange}
                         required
+                        className="form-input"
+                    />
+                    
+                    <input
+                        type="tel"
+                        name="phone"
+                        placeholder="Número de Contato (opcional)"
+                        value={formData.phone}
+                        onChange={handleChange}
                         className="form-input"
                     />
                     
