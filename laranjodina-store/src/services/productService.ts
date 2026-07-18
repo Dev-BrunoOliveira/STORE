@@ -213,10 +213,10 @@ const FULL_CATALOG: ProductDetailsData[] = [
   },
   {
     id: 16,
-    name: "Ecobag Ninguem Liga",
+    name: "Ecobag Quem fez, fez",
     price: 49.9,
     imageUrl: "/img/ecobag-modelo.png",
-    slug: "ecobag-ninguem-liga",
+    slug: "ecobag-quem-fez-fez",
     description:
       "Ecobag ecológica com design exclusivo da Laranjodina.",
     colors: ["Única"],
