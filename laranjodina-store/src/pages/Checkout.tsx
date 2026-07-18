@@ -35,7 +35,6 @@ const Checkout: React.FC = () => {
   const clearCart = useCartStore((s) => s.clearCart);
   const { user, token } = useAuthStore();
 
-  // Redireciona para login se não estiver autenticado
   React.useEffect(() => {
     if (!token) {
       toast.error("Faça login para finalizar a compra.");
