@@ -30,10 +30,16 @@ const Home: React.FC = () => {
     <div className="page-home">
       {/* 1. Hero Section */}
       <section className="home-section home-hero">
-        <div
-          className="home-hero-bg"
-          style={{ backgroundImage: "url('/img/banner.webp')" }}
-        ></div>
+        <div className="home-hero-bg">
+          <video 
+            src="/piscando.mp4" 
+            autoPlay 
+            loop 
+            muted 
+            playsInline 
+            className="hero-video-bg"
+          ></video>
+        </div>
 
         <div className="hero-content">
           <h2 className="text-uppercase-black hero-title">
@@ -61,7 +67,6 @@ const Home: React.FC = () => {
           </div>
         )}
       </section>
-
       <section className="home-section">
         <div className="category-grid">
           <Link to="/camisetas" className="category-block">
@@ -76,10 +81,6 @@ const Home: React.FC = () => {
           <Link to="/hiphop" className="category-block">
             Hiphop
           </Link>
-           <Link to="/sobre" className="category-block">
-            Sobre
-          </Link>
-          
         </div>
       </section>
     </div>
