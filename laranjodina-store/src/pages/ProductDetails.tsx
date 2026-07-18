@@ -34,16 +34,8 @@ const ProductDetails: React.FC = () => {
         const data = await getProductBySlug(slug);
 
         if (data) {
-          // Adicionando detalhes extras para simulação
-          const detailedData: DetailedProduct = {
-            ...data,
-            description:
-              "Camiseta Premium Oversized 100% algodão, malha 30.1 penteada. Estampa em silk-screen de alta durabilidade. Perfeita para um visual streetwear autêntico.",
-            colors: ["Preto", "Branco", "Cinza"],
-            sizes: ["P", "M", "G", "GG", "XG"],
-          };
-          setProduct(detailedData);
-          setSelectedSize(detailedData.sizes[0] || null);
+          setProduct(data);
+          setSelectedSize(data.sizes[0] || null);
         }
         setIsLoading(false);
       };

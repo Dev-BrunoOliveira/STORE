@@ -70,6 +70,9 @@ const Home: React.FC = () => {
           <Link to="/lancamentos" className="category-block">
             Lançamentos
           </Link>
+          <Link to="/acessorios" className="category-block">
+            Acessórios
+          </Link>
           <Link to="/hiphop" className="category-block">
             Hiphop
           </Link>

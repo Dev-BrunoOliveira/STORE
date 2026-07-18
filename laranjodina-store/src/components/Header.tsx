@@ -64,6 +64,8 @@ const Header: React.FC = () => {
           <Link to="/">Início</Link>
           <Link to="/lancamentos">Lançamentos</Link>
           <Link to="/camisetas">Camisetas</Link>
+          <Link to="/acessorios">Acessórios</Link>
+          <Link to="/hiphop">Hiphop</Link>
           <Link to="/sobre">Sobre</Link>
         </nav>
 
@@ -151,6 +153,8 @@ const Header: React.FC = () => {
           <Link to="/" className="mobile-nav-link" onClick={() => setIsMenuOpen(false)}>Início</Link>
           <Link to="/lancamentos" className="mobile-nav-link" onClick={() => setIsMenuOpen(false)}>Lançamentos</Link>
           <Link to="/camisetas" className="mobile-nav-link" onClick={() => setIsMenuOpen(false)}>Camisetas</Link>
+          <Link to="/acessorios" className="mobile-nav-link" onClick={() => setIsMenuOpen(false)}>Acessórios</Link>
+          <Link to="/hiphop" className="mobile-nav-link" onClick={() => setIsMenuOpen(false)}>Hiphop</Link>
           <Link to="/sobre" className="mobile-nav-link" onClick={() => setIsMenuOpen(false)}>Sobre</Link>
 
           <Link

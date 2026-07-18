@@ -64,7 +64,7 @@ const Sobre: React.FC = () => {
 
           <div className="image-card">
             <img
-              src="/img/DINA.jpg"
+              src="/img/DINA.png"
               alt="Logo Final da Laranjodina"
               className="about-img"
             />

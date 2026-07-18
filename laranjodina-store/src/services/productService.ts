@@ -199,6 +199,42 @@ const FULL_CATALOG: ProductDetailsData[] = [
     sizes: ["P", "M", "G", "GG"],
     category: ["lancamentos", "camisetas"],
   },
+  {
+    id: 15,
+    name: "Xícara Laranjodina",
+    price: 69.9,
+    imageUrl: "/img/xicara-modelo.png",
+    slug: "xicara-laranjodina",
+    description:
+      "Xícara de cerâmica de alta qualidade para começar o dia com atitude.",
+    colors: ["Branca"],
+    sizes: ["Tamanho Único"],
+    category: ["acessorios"],
+  },
+  {
+    id: 16,
+    name: "Ecobag Ninguem Liga",
+    price: 49.9,
+    imageUrl: "/img/ecobag-modelo.png",
+    slug: "ecobag-ninguem-liga",
+    description:
+      "Ecobag ecológica com design exclusivo da Laranjodina.",
+    colors: ["Única"],
+    sizes: ["Tamanho Único"],
+    category: ["acessorios"],
+  },
+  {
+    id: 17,
+    name: "Bandeira Streetwear",
+    price: 129.9,
+    imageUrl: "/img/bandeira-modelo.png",
+    slug: "bandeira-streetwear",
+    description:
+      "Bandeira decorativa estilo streetwear para pendurar no seu quarto ou estúdio.",
+    colors: ["Preta"],
+    sizes: ["40x40", "50x50", "60x60"],
+    category: ["acessorios"],
+  },
 ];
 
 /**
