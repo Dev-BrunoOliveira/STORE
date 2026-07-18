@@ -235,6 +235,18 @@ const FULL_CATALOG: ProductDetailsData[] = [
     sizes: ["40x40", "50x50", "60x60"],
     category: ["acessorios"],
   },
+  {
+    id: 18,
+    name: "Boné Laranjodina",
+    price: 89.9,
+    imageUrl: "/img/bone-modelo.png" ,
+    slug: "bone-laranjodina",
+    description:
+      "Boné verde com logo Laranjodina bordado e ajuste confortável",
+    colors: ["Verde"],
+    sizes: ["Tamanho Único"],
+    category: ["acessorios"],
+  },
 ];
 
 /**
