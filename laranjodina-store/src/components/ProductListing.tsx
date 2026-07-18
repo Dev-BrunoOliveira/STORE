@@ -38,24 +38,21 @@ const ProductListing: React.FC<ProductListingProps> = ({
 
   return (
     <div className="container product-listing-page">
-            <h1 className="text-uppercase-black page-title">{pageTitle}</h1>   
-       {" "}
+      <h1 className="text-uppercase-black page-title">{pageTitle}</h1>
+      
       {isLoading ? (
         <Spinner />
       ) : products.length === 0 ? (
         <div className="empty-state">
-                    Nenhum produto encontrado nesta categoria.        {" "}
+          Nenhum produto encontrado nesta categoria.
         </div>
       ) : (
         <div className="home-grid">
-                   {" "}
           {products.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
-                 {" "}
         </div>
       )}
-         {" "}
     </div>
   );
 };
