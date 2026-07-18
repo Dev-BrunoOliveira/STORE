@@ -20,6 +20,7 @@ const Signup: React.FC = () => {
 
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false); // Estado de carregamento
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -117,25 +118,41 @@ const Signup: React.FC = () => {
                         className="form-input"
                     />
                     
-                    <input
-                        type="password"
-                        name="password"
-                        placeholder="Senha (mínimo 6 caracteres)"
-                        value={formData.password}
-                        onChange={handleChange}
-                        required
-                        className="form-input"
-                    />
+                    <div style={{position: 'relative', width: '100%'}}>
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            name="password"
+                            placeholder="Senha (mínimo 6 caracteres)"
+                            value={formData.password}
+                            onChange={handleChange}
+                            required
+                            className="form-input"
+                            style={{paddingRight: '50px'}}
+                        />
+                        <button 
+                            type="button" 
+                            onClick={() => setShowPassword(!showPassword)}
+                            style={{
+                                position: 'absolute', right: '15px', top: '50%', transform: 'translateY(-50%)', 
+                                background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '1rem'
+                            }}
+                        >
+                            {showPassword ? "👁️" : "🙈"}
+                        </button>
+                    </div>
                     
-                    <input
-                        type="password"
-                        name="confirmPassword"
-                        placeholder="Confirme a Senha"
-                        value={formData.confirmPassword}
-                        onChange={handleChange}
-                        required
-                        className="form-input"
-                    />
+                    <div style={{position: 'relative', width: '100%'}}>
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            name="confirmPassword"
+                            placeholder="Confirme a Senha"
+                            value={formData.confirmPassword}
+                            onChange={handleChange}
+                            required
+                            className="form-input"
+                            style={{paddingRight: '50px'}}
+                        />
+                    </div>
 
                     <button type="submit" className="btn-accent signup-button" disabled={isLoading}>
                         {isLoading ? 'CADASTRANDO...' : 'CADASTRAR'}

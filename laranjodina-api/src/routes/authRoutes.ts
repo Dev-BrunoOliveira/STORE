@@ -80,7 +80,7 @@ authRouter.post('/signup', async (req: Request, res: Response) => {
     return res.status(201).json({
       message: 'Usuário cadastrado com sucesso!',
       token,
-      user: { id: result.insertId, name: name.trim(), email: email.toLowerCase() },
+      user: { id: result.insertId, name: name.trim(), email: email.toLowerCase(), phone: phone ? phone.trim() : null, address: null },
     });
   } catch (error: any) {
     console.error('Erro ao cadastrar usuário:', error.message);
@@ -130,7 +130,7 @@ authRouter.post('/login', async (req: Request, res: Response) => {
     return res.status(200).json({
       message: 'Login bem-sucedido.',
       token,
-      user: { id: user.id, name: user.name, email: user.email },
+      user: { id: user.id, name: user.name, email: user.email, phone: user.phone, address: user.address },
     });
   } catch (error: any) {
     console.error('Erro no login:', error.message);
@@ -205,6 +205,50 @@ authRouter.post('/reset-password', async (req: Request, res: Response) => {
   } catch (error) {
     console.error('Erro no reset-password:', error);
     return res.status(500).json({ message: 'Erro interno.' });
+  }
+});
+
+// =============================
+// ROTA DE ATUALIZAR PERFIL /profile
+// =============================
+import { requireAuth, AuthenticatedRequest } from '../middleware/authMiddleware';
+
+authRouter.put('/profile', requireAuth, async (req: AuthenticatedRequest, res: Response) => {
+  const { name, phone, address } = req.body;
+  const userId = req.user!.id;
+  const userEmail = req.user!.email;
+
+  if (!name || name.trim().length < 2) {
+    return res.status(400).json({ message: 'Nome inválido.' });
+  }
+
+  try {
+    // Atualizar no MySQL
+    await query(
+      'UPDATE users SET name = ?, phone = ?, address = ? WHERE id = ?',
+      [name.trim(), phone ? phone.trim() : null, address ? address.trim() : null, userId]
+    );
+
+    // Atualizar no Firebase
+    try {
+      await set(ref(db, `users/${userId}`), {
+        name: name.trim(),
+        email: userEmail,
+        phone: phone ? phone.trim() : null,
+        address: address ? address.trim() : null,
+        updatedAt: serverTimestamp()
+      });
+    } catch (fbError) {
+      console.error('Erro ao atualizar usuário no Firebase:', fbError);
+    }
+
+    return res.status(200).json({
+      message: 'Perfil atualizado com sucesso!',
+      user: { id: userId, name: name.trim(), email: userEmail, phone: phone?.trim() || null, address: address?.trim() || null },
+    });
+  } catch (error: any) {
+    console.error('Erro ao atualizar perfil:', error.message);
+    return res.status(500).json({ message: 'Erro interno ao atualizar perfil.' });
   }
 });
 
