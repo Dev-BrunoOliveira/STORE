@@ -12,7 +12,7 @@ const Spinner: React.FC = () => {
         playsInline 
         style={{ width: '250px', maxWidth: '80%', height: 'auto', borderRadius: '50%' }}
       />
-      <p className="spinner-text" style={{ marginTop: '0.25rem', fontWeight: 'bold', color: 'var(--color-accent)' }}>Carregando...</p>
+      <p className="spinner-text" style={{ marginTop: '-1rem', fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--color-accent)', textTransform: 'uppercase', letterSpacing: '2px' }}>Carregando...</p>
     </div>
   );
 };

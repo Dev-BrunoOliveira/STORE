@@ -1,5 +1,3 @@
-// src/pages/Login.tsx
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
@@ -16,7 +14,7 @@ const Login: React.FC = () => {
     });
 
     const [error, setError] = useState('');
-    const [isLoading, setIsLoading] = useState(false); // Estado de carregamento
+    const [isLoading, setIsLoading] = useState(false); 
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
