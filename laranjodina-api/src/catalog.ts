@@ -24,6 +24,10 @@ export const CATALOG: CatalogProduct[] = [
   { slug: "laranjodina",          name: "Camiseta Laranjodina",             price: 119.9 },
   { slug: "camiseta-leblon",      name: "Camiseta Leblon James",            price: 119.9 },
   { slug: "camiseta-breakingbad2",name: "Camiseta Breaking Bad Novo Mexico",price: 119.9 },
+  { slug: "xicara-laranjodina",   name: "Xícara Laranjodina",               price: 69.9 },
+  { slug: "ecobag-quem-fez-fez",  name: "Ecobag Quem fez, fez",             price: 49.9 },
+  { slug: "bandeira-streetwear",  name: "Bandeira Streetwear",              price: 129.9 },
+  { slug: "bone-laranjodina",     name: "Boné Laranjodina",                 price: 89.9 },
 ];
 
 export const getProductBySlug = (slug: string): CatalogProduct | undefined =>
