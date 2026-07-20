@@ -75,6 +75,31 @@ app.get('/api/produtos', async (_req: Request, res: Response) => {
   }
 });
 
+app.get('/api/produtos/:slug', async (req: Request, res: Response) => {
+  try {
+    const { slug } = req.params;
+    const produtos = (await query('SELECT * FROM produtos WHERE slug = ?', [slug])) as any[];
+    
+    if (produtos.length === 0) {
+      return res.status(404).json({ message: 'Produto não encontrado.' });
+    }
+    
+    const p = produtos[0];
+    const formatado = {
+      ...p,
+      category: JSON.parse(p.category),
+      sizes: JSON.parse(p.sizes),
+      oldPrice: p.old_price,
+      imageUrl: p.image_url,
+    };
+    
+    res.json(formatado);
+  } catch (error) {
+    console.error('Erro ao buscar produto por slug:', error);
+    res.status(500).json({ message: 'Erro interno ao buscar produto.' });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Servidor rodando em http://localhost:${PORT}`);
 });
