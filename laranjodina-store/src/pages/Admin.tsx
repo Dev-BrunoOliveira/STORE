@@ -9,6 +9,7 @@ import {
   FiRefreshCw,
   FiSearch,
   FiSliders,
+  FiUpload,
 } from "react-icons/fi";
 import { useAuthStore } from "../components/store/authStore";
 import toast from "react-hot-toast";
@@ -45,6 +46,10 @@ const Admin: React.FC = () => {
   // Estado do Modal de Produto
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+
+  // Estados para tamanho/cor customizados no modal
+  const [customSizeInput, setCustomSizeInput] = useState("");
+  const [customColorInput, setCustomColorInput] = useState("");
 
   const [productForm, setProductForm] = useState({
     id: 0,
@@ -149,7 +154,11 @@ const Admin: React.FC = () => {
 
   // --- Handlers de Produto ---
   const handleOpenAddModal = () => {
-    const nextId = products.length > 0 ? Math.max(...products.map((p) => p.id || 0)) + 1 : 1;
+    const validIds = products
+      .map((p) => (typeof p.id === "number" ? p.id : parseInt(String(p.id), 10)))
+      .filter((id) => !isNaN(id));
+    const nextId = validIds.length > 0 ? Math.max(...validIds) + 1 : Date.now();
+
     setEditingProduct(null);
     setProductForm({
       id: nextId,
@@ -183,6 +192,25 @@ const Admin: React.FC = () => {
     setIsModalOpen(true);
   };
 
+  const handleImageFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 3 * 1024 * 1024) {
+      toast.error("Por favor, selecione uma imagem de até 3MB.");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (reader.result) {
+        setProductForm((prev) => ({ ...prev, imageUrl: reader.result as string }));
+        toast.success("Foto carregada do computador!");
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
   const handleSaveProductForm = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!productForm.name || !productForm.price || !productForm.imageUrl) {
@@ -199,12 +227,22 @@ const Admin: React.FC = () => {
         .replace(/[^a-z0-9]+/g, "-")
         .replace(/^-+|-+$/g, "");
 
+    const cleanPrice = parseFloat(String(productForm.price).replace(",", "."));
+    const cleanOldPrice = productForm.oldPrice
+      ? parseFloat(String(productForm.oldPrice).replace(",", "."))
+      : undefined;
+
+    if (isNaN(cleanPrice)) {
+      toast.error("Por favor, informe um preço válido (ex: 119.90).");
+      return;
+    }
+
     const newProd: Product = {
-      id: productForm.id,
+      id: productForm.id || Date.now(),
       name: productForm.name.trim(),
       slug: generatedSlug,
-      price: parseFloat(productForm.price),
-      oldPrice: productForm.oldPrice ? parseFloat(productForm.oldPrice) : undefined,
+      price: cleanPrice,
+      oldPrice: cleanOldPrice && !isNaN(cleanOldPrice) ? cleanOldPrice : undefined,
       imageUrl: productForm.imageUrl.trim(),
       description: productForm.description.trim(),
       colors: productForm.colors,
@@ -219,8 +257,9 @@ const Admin: React.FC = () => {
       );
       setIsModalOpen(false);
       loadProducts();
-    } catch (err) {
-      toast.error("Erro ao salvar produto no Firebase.");
+    } catch (err: any) {
+      console.error("Erro ao salvar produto no Firebase:", err);
+      toast.error(err?.message || "Erro ao salvar produto no Firebase.");
     }
   };
 
@@ -283,50 +322,50 @@ const Admin: React.FC = () => {
 
   return (
     <div className="container account-page" style={{ maxWidth: "1200px" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem" }}>
+      <div className="admin-header-row">
         <div>
-          <h1 className="text-uppercase-black account-title" style={{ margin: 0 }}>
+          <h1 className="text-uppercase-black account-title admin-header-title">
             Painel Admin 👑
           </h1>
-          <p style={{ color: "var(--text-muted)", margin: "5px 0 0 0" }}>
+          <p style={{ color: "var(--text-muted)", margin: "5px 0 0 0", fontSize: "0.9rem" }}>
             Gerencie produtos, pedidos e configurações da Laranjodina
           </p>
         </div>
-        <div style={{ display: "flex", gap: "10px" }}>
+        <div>
           <button onClick={handleRestoreInitialCatalog} className="btn-accent" style={{ background: "#333", color: "#fff", fontSize: "0.85rem", padding: "8px 16px" }}>
             <FiRefreshCw style={{ marginRight: "6px" }} /> Restaurar Catálogo Padrão
           </button>
         </div>
       </div>
 
-      {/* ── NAVEGAÇÃO DE ABAS ── */}
-      <div style={{ display: "flex", gap: "15px", borderBottom: "1px solid var(--border-color, #333)", marginBottom: "2rem", paddingBottom: "10px" }}>
+      {/* ── NAVEGAÇÃO DE ABAS RESPONSIVA ── */}
+      <div className="admin-tabs-nav">
         <button
           onClick={() => setActiveTab("products")}
+          className="admin-tab-btn"
           style={{
             background: activeTab === "products" ? "var(--color-accent)" : "transparent",
             color: activeTab === "products" ? "var(--color-black)" : "#fff",
-            border: "none", padding: "10px 20px", borderRadius: "8px", fontWeight: "bold", cursor: "pointer", display: "flex", alignItems: "center", gap: "8px"
           }}
         >
           <FiPackage /> Produtos ({products.length})
         </button>
         <button
           onClick={() => setActiveTab("orders")}
+          className="admin-tab-btn"
           style={{
             background: activeTab === "orders" ? "var(--color-accent)" : "transparent",
             color: activeTab === "orders" ? "var(--color-black)" : "#fff",
-            border: "none", padding: "10px 20px", borderRadius: "8px", fontWeight: "bold", cursor: "pointer", display: "flex", alignItems: "center", gap: "8px"
           }}
         >
           <FiShoppingBag /> Pedidos dos Clientes ({allOrders.length})
         </button>
         <button
           onClick={() => setActiveTab("settings")}
+          className="admin-tab-btn"
           style={{
             background: activeTab === "settings" ? "var(--color-accent)" : "transparent",
             color: activeTab === "settings" ? "var(--color-black)" : "#fff",
-            border: "none", padding: "10px 20px", borderRadius: "8px", fontWeight: "bold", cursor: "pointer", display: "flex", alignItems: "center", gap: "8px"
           }}
         >
           <FiSliders /> Configurações da Loja
@@ -336,8 +375,8 @@ const Admin: React.FC = () => {
       {/* ── ABA 1: PRODUTOS ── */}
       {activeTab === "products" && (
         <div>
-          <div style={{ display: "flex", justifyContent: "space-between", gap: "15px", marginBottom: "1.5rem", flexWrap: "wrap" }}>
-            <div style={{ position: "relative", flex: 1, minWidth: "250px" }}>
+          <div className="admin-search-row">
+            <div className="admin-search-input-wrapper">
               <FiSearch style={{ position: "absolute", left: "15px", top: "50%", transform: "translateY(-50%)", color: "var(--text-muted)" }} />
               <input
                 type="text"
@@ -348,7 +387,7 @@ const Admin: React.FC = () => {
                 style={{ paddingLeft: "45px" }}
               />
             </div>
-            <button onClick={handleOpenAddModal} className="btn-accent" style={{ padding: "12px 24px" }}>
+            <button onClick={handleOpenAddModal} className="btn-accent" style={{ padding: "12px 24px", whiteSpace: "nowrap" }}>
               <FiPlus style={{ marginRight: "8px" }} /> Novo Produto
             </button>
           </div>
@@ -356,8 +395,8 @@ const Admin: React.FC = () => {
           {loadingProducts ? (
             <p style={{ textAlign: "center", color: "var(--text-muted)", padding: "40px" }}>Carregando produtos...</p>
           ) : (
-            <div style={{ overflowX: "auto" }}>
-              <table style={{ width: "100%", borderCollapse: "collapse", color: "#fff", background: "var(--surface-color, #1a1a1a)", borderRadius: "8px" }}>
+            <div className="admin-mobile-table-wrapper">
+              <table style={{ width: "100%", borderCollapse: "collapse", color: "#fff", background: "var(--surface-color, #1a1a1a)", borderRadius: "8px", minWidth: "600px" }}>
                 <thead>
                   <tr style={{ borderBottom: "1px solid #333", textAlign: "left", background: "#111" }}>
                     <th style={{ padding: "15px" }}>Foto</th>
@@ -522,7 +561,7 @@ const Admin: React.FC = () => {
           position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
           background: "rgba(0,0,0,0.85)", display: "flex", justifyContent: "center", alignItems: "center", zIndex: 9999, padding: "20px"
         }}>
-          <div style={{
+          <div className="admin-modal-box" style={{
             background: "#181818", padding: "30px", borderRadius: "12px", width: "100%", maxWidth: "600px", maxHeight: "90vh", overflowY: "auto", border: "1px solid #333"
           }}>
             <h2 className="text-uppercase-black" style={{ marginTop: 0 }}>
@@ -542,8 +581,8 @@ const Admin: React.FC = () => {
                 />
               </div>
 
-              <div style={{ display: "flex", gap: "15px" }}>
-                <div style={{ flex: 1 }}>
+              <div className="admin-form-row-2col">
+                <div>
                   <label style={{ color: "var(--text-muted)", fontSize: "0.85rem" }}>Preço (R$) *</label>
                   <input
                     type="number"
@@ -555,7 +594,7 @@ const Admin: React.FC = () => {
                     placeholder="119.90"
                   />
                 </div>
-                <div style={{ flex: 1 }}>
+                <div>
                   <label style={{ color: "var(--text-muted)", fontSize: "0.85rem" }}>Preço Antigo (Desconto)</label>
                   <input
                     type="number"
@@ -569,15 +608,38 @@ const Admin: React.FC = () => {
               </div>
 
               <div>
-                <label style={{ color: "var(--text-muted)", fontSize: "0.85rem" }}>URL da Imagem *</label>
-                <input
-                  type="text"
-                  value={productForm.imageUrl}
-                  onChange={(e) => setProductForm({ ...productForm, imageUrl: e.target.value })}
-                  required
-                  className="form-input"
-                  placeholder="Ex: /img/2pac-modelo.jpg ou https://..."
-                />
+                <label style={{ color: "var(--text-muted)", fontSize: "0.85rem", display: "block", marginBottom: "6px" }}>
+                  Foto do Produto *
+                </label>
+                <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                  <label style={{
+                    display: "flex", alignItems: "center", justifyContent: "center", gap: "10px",
+                    padding: "14px", background: "#222", border: "2px dashed var(--color-accent)",
+                    borderRadius: "8px", color: "var(--color-accent)", fontWeight: "bold",
+                    cursor: "pointer", textAlign: "center", transition: "all 0.2s ease"
+                  }}>
+                    <FiUpload size={20} />
+                    <span>Carregar Foto do Computador ou Celular</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageFileUpload}
+                      style={{ display: "none" }}
+                    />
+                  </label>
+
+                  <details style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>
+                    <summary style={{ cursor: "pointer" }}>Ou colar link da imagem (URL)</summary>
+                    <input
+                      type="text"
+                      value={productForm.imageUrl}
+                      onChange={(e) => setProductForm({ ...productForm, imageUrl: e.target.value })}
+                      className="form-input"
+                      placeholder="Ex: /img/2pac-modelo.jpg ou https://..."
+                      style={{ marginTop: "6px" }}
+                    />
+                  </details>
+                </div>
               </div>
 
               {/* ── Pré-visualização da Foto ── */}
@@ -634,8 +696,136 @@ const Admin: React.FC = () => {
                 </div>
               </div>
 
-              <div style={{ display: "flex", gap: "15px", marginTop: "15px" }}>
-                <button type="submit" className="btn-accent" style={{ flex: 1 }}>
+              {/* ── SELETOR DE TAMANHOS (INCLUI TAMANHO ÚNICO & PERSONALIZADOS COMO BANDEIRAS) ── */}
+              <div>
+                <label style={{ color: "var(--text-muted)", fontSize: "0.85rem", display: "block", marginBottom: "6px" }}>
+                  Tamanhos Disponíveis:
+                </label>
+                <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginBottom: "8px" }}>
+                  {["P", "M", "G", "GG", "Tamanho Único"].map((sz) => {
+                    const selected = productForm.sizes.includes(sz);
+                    return (
+                      <button
+                        key={sz}
+                        type="button"
+                        onClick={() => {
+                          const updated = selected
+                            ? productForm.sizes.filter((s) => s !== sz)
+                            : [...productForm.sizes, sz];
+                          setProductForm({ ...productForm, sizes: updated });
+                        }}
+                        style={{
+                          background: selected ? "var(--color-accent)" : "#222",
+                          color: selected ? "#000" : "#fff",
+                          border: selected ? "1px solid var(--color-accent)" : "1px solid #444",
+                          padding: "6px 12px",
+                          borderRadius: "6px",
+                          fontSize: "0.825rem",
+                          fontWeight: "bold",
+                          cursor: "pointer"
+                        }}
+                      >
+                        {sz}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <div className="admin-custom-input-row">
+                  <input
+                    type="text"
+                    placeholder="Adicionar tamanho customizado (ex: 1.00m x 0.70m)"
+                    value={customSizeInput}
+                    onChange={(e) => setCustomSizeInput(e.target.value)}
+                    className="form-input"
+                    style={{ fontSize: "0.85rem" }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (customSizeInput.trim() && !productForm.sizes.includes(customSizeInput.trim())) {
+                        setProductForm({ ...productForm, sizes: [...productForm.sizes, customSizeInput.trim()] });
+                        setCustomSizeInput("");
+                      }
+                    }}
+                    className="btn-accent"
+                    style={{ padding: "8px 15px", whiteSpace: "nowrap", fontSize: "0.85rem" }}
+                  >
+                    + Adicionar
+                  </button>
+                </div>
+
+                <div style={{ marginTop: "6px", fontSize: "0.8rem", color: "var(--text-muted)" }}>
+                  Tamanhos selecionados: <strong>{productForm.sizes.length > 0 ? productForm.sizes.join(", ") : "Nenhum"}</strong>
+                </div>
+              </div>
+
+              {/* ── SELETOR DE CORES ── */}
+              <div>
+                <label style={{ color: "var(--text-muted)", fontSize: "0.85rem", display: "block", marginBottom: "6px" }}>
+                  Cores Disponíveis:
+                </label>
+                <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginBottom: "8px" }}>
+                  {["Preto", "Branco", "Off-White", "Bege", "Laranja", "Multicolor"].map((c) => {
+                    const selected = productForm.colors.includes(c);
+                    return (
+                      <button
+                        key={c}
+                        type="button"
+                        onClick={() => {
+                          const updated = selected
+                            ? productForm.colors.filter((clr) => clr !== c)
+                            : [...productForm.colors, c];
+                          setProductForm({ ...productForm, colors: updated });
+                        }}
+                        style={{
+                          background: selected ? "var(--color-accent)" : "#222",
+                          color: selected ? "#000" : "#fff",
+                          border: selected ? "1px solid var(--color-accent)" : "1px solid #444",
+                          padding: "6px 12px",
+                          borderRadius: "6px",
+                          fontSize: "0.825rem",
+                          fontWeight: "bold",
+                          cursor: "pointer"
+                        }}
+                      >
+                        {c}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <div className="admin-custom-input-row">
+                  <input
+                    type="text"
+                    placeholder="Adicionar cor customizada (ex: Verde Musgo)"
+                    value={customColorInput}
+                    onChange={(e) => setCustomColorInput(e.target.value)}
+                    className="form-input"
+                    style={{ fontSize: "0.85rem" }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (customColorInput.trim() && !productForm.colors.includes(customColorInput.trim())) {
+                        setProductForm({ ...productForm, colors: [...productForm.colors, customColorInput.trim()] });
+                        setCustomColorInput("");
+                      }
+                    }}
+                    className="btn-accent"
+                    style={{ padding: "8px 15px", whiteSpace: "nowrap", fontSize: "0.85rem" }}
+                  >
+                    + Adicionar
+                  </button>
+                </div>
+
+                <div style={{ marginTop: "6px", fontSize: "0.8rem", color: "var(--text-muted)" }}>
+                  Cores selecionadas: <strong>{productForm.colors.length > 0 ? productForm.colors.join(", ") : "Nenhuma"}</strong>
+                </div>
+              </div>
+
+              <div className="admin-modal-actions">
+                <button type="submit" className="btn-accent">
                   Salvar Produto
                 </button>
                 <button

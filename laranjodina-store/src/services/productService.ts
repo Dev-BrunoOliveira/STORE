@@ -233,9 +233,6 @@ const FULL_CATALOG: ProductDetailsData[] = [
   },
 ];
 
-/**
- * Popula o Firebase Database com os produtos iniciais se o nó 'produtos' estiver vazio.
- */
 export const seedInitialProducts = async (): Promise<ProductDetailsData[]> => {
   try {
     const productsRef = ref(db, "produtos");
@@ -310,8 +307,18 @@ export const getProductBySlug = async (
  * Salvar / Editar produto no Firebase Database.
  */
 export const saveProduct = async (product: ProductDetailsData): Promise<void> => {
+  // Firebase Realtime DB rejeita objetos com propriedades 'undefined'.
+  // Removemos qualquer chave com valor undefined antes de salvar.
+  const cleanProduct: Record<string, any> = {};
+  (Object.keys(product) as Array<keyof ProductDetailsData>).forEach((key) => {
+    const val = product[key];
+    if (val !== undefined) {
+      cleanProduct[key] = val;
+    }
+  });
+
   const productRef = ref(db, `produtos/${product.id}`);
-  await set(productRef, product);
+  await set(productRef, cleanProduct);
 };
 
 /**
