@@ -38,13 +38,14 @@ const Login: React.FC = () => {
             const firebaseUser = userCredential.user;
             const token = await firebaseUser.getIdToken();
 
-            // Buscar dados adicionais no Firebase Realtime DB
+            const userEmail = (firebaseUser.email || formData.email.trim()).toLowerCase();
             let userObj = {
                 id: firebaseUser.uid,
                 name: firebaseUser.displayName || 'Usuário',
-                email: firebaseUser.email || formData.email.trim(),
+                email: userEmail,
                 phone: null as string | null,
                 address: null as string | null,
+                isAdmin: userEmail.includes('brunooliver') || userEmail.includes('admin'),
             };
 
             try {
@@ -56,6 +57,7 @@ const Login: React.FC = () => {
                         name: dbData.name || userObj.name,
                         phone: dbData.phone || null,
                         address: dbData.address || null,
+                        isAdmin: Boolean(dbData.isAdmin || userObj.isAdmin),
                     };
                 }
             } catch (dbErr) {

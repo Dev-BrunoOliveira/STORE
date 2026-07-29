@@ -7,6 +7,7 @@ interface AuthUser {
   email: string;
   phone?: string | null;
   address?: string | null;
+  isAdmin?: boolean;
 }
 
 interface AuthState {

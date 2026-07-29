@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FiUser, FiShoppingBag, FiMenu, FiX, FiLogOut, FiChevronDown } from "react-icons/fi";
+import { FiUser, FiShoppingBag, FiMenu, FiX, FiLogOut, FiChevronDown, FiShield } from "react-icons/fi";
 import { useCartStore } from "../components/store/cartStore";
 import { useAuthStore } from "../components/store/authStore";
 import toast from "react-hot-toast";
@@ -16,6 +16,10 @@ const Header: React.FC = () => {
   );
 
   const { user, logout } = useAuthStore();
+
+  const isUserAdmin =
+    user?.isAdmin ||
+    (user?.email && (user.email.includes("brunooliver") || user.email.includes("admin")));
 
   const handleLogout = () => {
     logout();
@@ -90,6 +94,16 @@ const Header: React.FC = () => {
                     <strong>{user.name}</strong>
                     <small>{user.email}</small>
                   </div>
+                  {isUserAdmin && (
+                    <Link
+                      to="/admin"
+                      className="user-dropdown-item"
+                      onClick={() => setIsUserMenuOpen(false)}
+                      style={{ color: "var(--color-accent)", fontWeight: "bold" }}
+                    >
+                      <FiShield size={15} /> Painel Admin 👑
+                    </Link>
+                  )}
                   <Link
                     to="/minha-conta"
                     className="user-dropdown-item"

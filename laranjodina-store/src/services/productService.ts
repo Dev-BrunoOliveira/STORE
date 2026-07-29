@@ -1,5 +1,6 @@
 import { Product } from "../types/Product";
-import { API_BASE } from "../config/api";
+import { db } from "../config/firebase";
+import { ref, get, set, remove } from "firebase/database";
 
 interface ProductDetailsData extends Product {
   description: string;
@@ -233,7 +234,31 @@ const FULL_CATALOG: ProductDetailsData[] = [
 ];
 
 /**
- * Busca a lista de produtos da API, permitindo filtro.
+ * Popula o Firebase Database com os produtos iniciais se o nó 'produtos' estiver vazio.
+ */
+export const seedInitialProducts = async (): Promise<ProductDetailsData[]> => {
+  try {
+    const productsRef = ref(db, "produtos");
+    const snapshot = await get(productsRef);
+    if (!snapshot.exists()) {
+      const initialMap: { [id: string]: ProductDetailsData } = {};
+      FULL_CATALOG.forEach(p => {
+        initialMap[p.id] = p;
+      });
+      await set(productsRef, initialMap);
+      return FULL_CATALOG;
+    } else {
+      const data = snapshot.val();
+      return Object.values(data);
+    }
+  } catch (err) {
+    console.warn("Erro ao popular catálogo no Firebase, usando fallback local.", err);
+    return FULL_CATALOG;
+  }
+};
+
+/**
+ * Busca a lista de produtos do Firebase Database.
  */
 export const fetchProducts = async (
   count?: number,
@@ -242,29 +267,25 @@ export const fetchProducts = async (
   let products: ProductDetailsData[] = [];
   
   try {
-    const response = await fetch(`${API_BASE}/api/produtos`);
-    if (response.ok) {
-      const data = await response.json();
-      if (data && data.length > 0) {
-        products = data;
-      }
+    const productsRef = ref(db, "produtos");
+    const snapshot = await get(productsRef);
+    if (snapshot.exists()) {
+      const data = snapshot.val();
+      products = Object.values(data);
+    } else {
+      // Se não existir nada no banco ainda, popula automaticamente
+      products = await seedInitialProducts();
     }
   } catch (error) {
-    console.warn("API indisponível ou vazia, usando catálogo local (fallback).", error);
-  }
-
-  // Fallback: se a API falhou ou retornou vazio, usa os dados locais
-  if (products.length === 0) {
+    console.warn("Erro ao buscar produtos do Firebase, usando catálogo local (fallback).", error);
     products = FULL_CATALOG;
   }
 
   if (categorySlug === "mais-vendidos") {
-    // Retorna os 4 primeiros produtos se "mais-vendidos" for passado
     products = products.slice(0, 4);
   } else if (categorySlug && categorySlug !== "todos") {
-    // Filtra por categoria
     products = products.filter((p) =>
-      p.category.some((cat) => cat === categorySlug)
+      p.category && p.category.some((cat) => cat.toLowerCase() === categorySlug.toLowerCase())
     );
   }
 
@@ -281,19 +302,26 @@ export const fetchProducts = async (
 export const getProductBySlug = async (
   slug: string
 ): Promise<ProductDetailsData | undefined> => {
-  try {
-    const response = await fetch(`${API_BASE}/api/produtos/${slug}`);
-    if (response.ok) {
-      const product = await response.json();
-      return product;
-    }
-  } catch (error) {
-    console.warn("API indisponível ao buscar slug, usando catálogo local (fallback).");
-  }
+  const allProducts = await fetchProducts();
+  return allProducts.find(p => p.slug === slug);
+};
 
-  // Fallback local
-  return FULL_CATALOG.find(p => p.slug === slug);
+/**
+ * Salvar / Editar produto no Firebase Database.
+ */
+export const saveProduct = async (product: ProductDetailsData): Promise<void> => {
+  const productRef = ref(db, `produtos/${product.id}`);
+  await set(productRef, product);
+};
+
+/**
+ * Deletar produto do Firebase Database.
+ */
+export const deleteProduct = async (productId: number | string): Promise<void> => {
+  const productRef = ref(db, `produtos/${productId}`);
+  await remove(productRef);
 };
 
 // Exporta o ProductDetailsData como Product para ser usado na tipagem em ProductDetails.tsx
 export type { ProductDetailsData as Product };
+

@@ -81,6 +81,8 @@ const Signup: React.FC = () => {
                 msg = 'E-mail inválido.';
             } else if (err.code === 'auth/weak-password') {
                 msg = 'A senha é muito fraca.';
+            } else if (err.code === 'auth/configuration-not-found') {
+                msg = 'Ative o provedor E-mail/Senha no Firebase Console (Menu Authentication > Sign-in method).';
             }
             setError(msg);
             toast.error(msg);

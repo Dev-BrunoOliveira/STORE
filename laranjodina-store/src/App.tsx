@@ -19,6 +19,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import MinhaConta from './pages/MinhaConta';
 import CartSync from './components/CartSync';
+import Admin from './pages/Admin';
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
           <Route path="/pedido/sucesso" element={<OrderSuccess />} />
           <Route path="/pedido/pendente" element={<OrderPending />} />
           <Route path="/minha-conta" element={<MinhaConta />} />
+          <Route path="/admin" element={<Admin />} />
 
           {/* Rota 404 */}
           <Route
