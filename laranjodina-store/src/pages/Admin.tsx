@@ -372,14 +372,23 @@ const Admin: React.FC = () => {
                   {filteredProducts.map((p) => (
                     <tr key={p.id} style={{ borderBottom: "1px solid #262626" }}>
                       <td style={{ padding: "12px 15px" }}>
-                        <img src={p.imageUrl} alt={p.name} style={{ width: "45px", height: "45px", objectFit: "cover", borderRadius: "6px" }} />
+                        <div style={{ position: "relative", width: "60px", height: "60px", borderRadius: "8px", overflow: "hidden", background: "#222", border: "1px solid #333" }}>
+                          <img
+                            src={p.imageUrl}
+                            alt={p.name}
+                            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src = "/img/2pac-modelo.jpg";
+                            }}
+                          />
+                        </div>
                       </td>
                       <td style={{ padding: "12px 15px", fontWeight: "bold" }}>
-                        {p.name}
+                        <span style={{ fontSize: "1rem" }}>{p.name}</span>
                         <br />
                         <small style={{ color: "var(--text-muted)", fontWeight: "normal" }}>slug: {p.slug}</small>
                       </td>
-                      <td style={{ padding: "12px 15px" }}>
+                      <td style={{ padding: "12px 15px", fontWeight: "bold", color: "var(--color-accent)" }}>
                         {fmt(p.price)}
                         {p.oldPrice && (
                           <span style={{ textDecoration: "line-through", color: "var(--text-muted)", fontSize: "0.8rem", marginLeft: "6px" }}>
@@ -388,7 +397,11 @@ const Admin: React.FC = () => {
                         )}
                       </td>
                       <td style={{ padding: "12px 15px" }}>
-                        {p.category ? p.category.join(", ") : "-"}
+                        {p.category ? p.category.map(c => (
+                          <span key={c} style={{ background: "#262626", padding: "3px 8px", borderRadius: "4px", fontSize: "0.75rem", marginRight: "4px" }}>
+                            {c}
+                          </span>
+                        )) : "-"}
                       </td>
                       <td style={{ padding: "12px 15px" }}>
                         {p.sizes ? p.sizes.join(", ") : "-"}
@@ -396,17 +409,17 @@ const Admin: React.FC = () => {
                       <td style={{ padding: "12px 15px", textAlign: "right" }}>
                         <button
                           onClick={() => handleOpenEditModal(p)}
-                          style={{ background: "transparent", border: "none", color: "var(--color-accent)", cursor: "pointer", marginRight: "12px" }}
+                          style={{ background: "#262626", border: "1px solid #333", color: "var(--color-accent)", cursor: "pointer", marginRight: "8px", padding: "8px", borderRadius: "6px" }}
                           title="Editar"
                         >
-                          <FiEdit2 size={18} />
+                          <FiEdit2 size={16} />
                         </button>
                         <button
                           onClick={() => handleDeleteProduct(p.id)}
-                          style={{ background: "transparent", border: "none", color: "#FF5252", cursor: "pointer" }}
+                          style={{ background: "#262626", border: "1px solid #333", color: "#FF5252", cursor: "pointer", padding: "8px", borderRadius: "6px" }}
                           title="Excluir"
                         >
-                          <FiTrash2 size={18} />
+                          <FiTrash2 size={16} />
                         </button>
                       </td>
                     </tr>
@@ -565,6 +578,27 @@ const Admin: React.FC = () => {
                   className="form-input"
                   placeholder="Ex: /img/2pac-modelo.jpg ou https://..."
                 />
+              </div>
+
+              {/* ── Pré-visualização da Foto ── */}
+              <div style={{ background: "#111", padding: "12px", borderRadius: "8px", border: "1px dashed #444", display: "flex", alignItems: "center", gap: "15px" }}>
+                <div style={{ width: "80px", height: "80px", borderRadius: "6px", overflow: "hidden", background: "#222", flexShrink: 0 }}>
+                  <img
+                    src={productForm.imageUrl || "/img/2pac-modelo.jpg"}
+                    alt="Preview"
+                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = "/img/2pac-modelo.jpg";
+                    }}
+                  />
+                </div>
+                <div>
+                  <small style={{ color: "var(--text-muted)", display: "block", marginBottom: "4px" }}>Pré-visualização da foto:</small>
+                  <strong style={{ color: "#fff", fontSize: "0.95rem" }}>{productForm.name || "Nome do produto..."}</strong>
+                  <div style={{ color: "var(--color-accent)", fontWeight: "bold", fontSize: "0.9rem" }}>
+                    {productForm.price ? `R$ ${parseFloat(productForm.price).toFixed(2)}` : "R$ 0,00"}
+                  </div>
+                </div>
               </div>
 
               <div>
