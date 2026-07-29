@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { API_BASE } from '../config/api';
+import { auth, db } from '../config/firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { ref, get } from 'firebase/database';
 import { useAuthStore } from '../components/store/authStore';
 
 const Login: React.FC = () => {
@@ -32,36 +34,53 @@ const Login: React.FC = () => {
         setIsLoading(true);
 
         try {
-            const response = await fetch(`${API_BASE}/api/auth/login`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData)
-            });
+            const userCredential = await signInWithEmailAndPassword(auth, formData.email.trim(), formData.password);
+            const firebaseUser = userCredential.user;
+            const token = await firebaseUser.getIdToken();
 
-            const data = await response.json();
+            // Buscar dados adicionais no Firebase Realtime DB
+            let userObj = {
+                id: firebaseUser.uid,
+                name: firebaseUser.displayName || 'Usuário',
+                email: firebaseUser.email || formData.email.trim(),
+                phone: null as string | null,
+                address: null as string | null,
+            };
 
-            if (!response.ok) {
-                
-                setError(data.message || 'Erro ao tentar fazer login. Verifique suas credenciais.');
-                toast.error(data.message || 'Falha no login.');
-                return;
+            try {
+                const snapshot = await get(ref(db, `users/${firebaseUser.uid}`));
+                if (snapshot.exists()) {
+                    const dbData = snapshot.val();
+                    userObj = {
+                        ...userObj,
+                        name: dbData.name || userObj.name,
+                        phone: dbData.phone || null,
+                        address: dbData.address || null,
+                    };
+                }
+            } catch (dbErr) {
+                console.warn('Erro ao carregar perfil do DB:', dbErr);
             }
 
-         
-            toast.success(`Bem-vindo de volta, ${data.user?.name?.split(' ')[0]}! 🤘`);
-            storeLogin(data.token, data.user);
+            toast.success(`Bem-vindo de volta, ${userObj.name.split(' ')[0]}! 🤘`);
+            storeLogin(token, userObj);
             navigate('/');
 
-        } catch (error) {
-            console.error("Erro na requisição de login:", error);
-            setError('Não foi possível conectar ao servidor. Tente novamente.');
-            toast.error('Erro de conexão.');
+        } catch (err: any) {
+            console.error("Erro no login com Firebase:", err);
+            let msg = 'Credenciais inválidas ou erro ao entrar.';
+            if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
+                msg = 'E-mail ou senha incorretos.';
+            } else if (err.code === 'auth/too-many-requests') {
+                msg = 'Muitas tentativas malsucedidas. Tente novamente mais tarde.';
+            }
+            setError(msg);
+            toast.error(msg);
         } finally {
             setIsLoading(false);
         }
     };
+
 
     return (
         <div className="container signup-page">

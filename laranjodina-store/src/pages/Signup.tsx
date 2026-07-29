@@ -1,9 +1,9 @@
-// src/pages/Signup.tsx
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { API_BASE } from '../config/api';
+import { auth, db } from '../config/firebase';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { ref, set, serverTimestamp } from 'firebase/database';
 import { useAuthStore } from '../components/store/authStore';
 
 const Signup: React.FC = () => {
@@ -43,42 +43,52 @@ const Signup: React.FC = () => {
         setIsLoading(true);
 
         try {
-            // Chamada à API Node.js/Express
-            const response = await fetch(`${API_BASE}/api/auth/signup`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                // Envia apenas os dados necessários para o Backend
-                body: JSON.stringify({
-                    name: formData.name,
-                    email: formData.email,
-                    phone: formData.phone,
-                    password: formData.password
-                })
+            // 1. Criar usuário com Firebase Auth
+            const userCredential = await createUserWithEmailAndPassword(auth, formData.email.trim(), formData.password);
+            const user = userCredential.user;
+
+            // 2. Atualizar o nome do perfil no Firebase Auth
+            await updateProfile(user, {
+                displayName: formData.name.trim()
             });
 
-            const data = await response.json();
+            // 3. Salvar dados extras do perfil no Firebase Realtime Database
+            const userObj = {
+                id: user.uid,
+                name: formData.name.trim(),
+                email: formData.email.trim().toLowerCase(),
+                phone: formData.phone ? formData.phone.trim() : null,
+                address: null,
+            };
 
-            if (!response.ok) {
-                // Trata erros 400 (obrigatório) ou 409 (e-mail duplicado)
-                setError(data.message || 'Erro no servidor ao tentar cadastrar.');
-                toast.error(data.message || 'Falha no cadastro.');
-                return;
-            }
+            await set(ref(db, `users/${user.uid}`), {
+                ...userObj,
+                createdAt: serverTimestamp()
+            });
 
-            toast.success(`Bem-vindo à Laranjodina, ${data.user?.name?.split(' ')[0]}! 🎉`);
-            storeLogin(data.token, data.user);
+            const token = await user.getIdToken();
+
+            toast.success(`Bem-vindo à Laranjodina, ${formData.name.split(' ')[0]}! 🎉`);
+            storeLogin(token, userObj);
             navigate('/');
 
-        } catch (error) {
-            console.error("Erro na requisição de cadastro:", error);
-            setError('Não foi possível conectar ao servidor. Tente novamente.');
-            toast.error('Erro de conexão.');
+        } catch (err: any) {
+            console.error("Erro no cadastro com Firebase:", err);
+            let msg = 'Erro ao tentar cadastrar.';
+            if (err.code === 'auth/email-already-in-use') {
+                msg = 'Este e-mail já está em uso por outra conta.';
+            } else if (err.code === 'auth/invalid-email') {
+                msg = 'E-mail inválido.';
+            } else if (err.code === 'auth/weak-password') {
+                msg = 'A senha é muito fraca.';
+            }
+            setError(msg);
+            toast.error(msg);
         } finally {
             setIsLoading(false);
         }
     };
+
 
     return (
         <div className="container signup-page">

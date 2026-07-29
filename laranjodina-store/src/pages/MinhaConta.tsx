@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FiUser, FiShoppingBag, FiLogOut, FiMail, FiPhone, FiMapPin, FiEdit2 } from "react-icons/fi";
 import { useAuthStore } from "../components/store/authStore";
 import toast from "react-hot-toast";
-import { API_BASE } from "../config/api";
+import { db } from "../config/firebase";
+import { ref, update, get } from "firebase/database";
 
 const MinhaConta: React.FC = () => {
   const navigate = useNavigate();
@@ -16,6 +17,28 @@ const MinhaConta: React.FC = () => {
     address: user?.address || ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [orders, setOrders] = useState<any[]>([]);
+  const [loadingOrders, setLoadingOrders] = useState(false);
+
+  useEffect(() => {
+    if (user?.id) {
+      setLoadingOrders(true);
+      const ordersRef = ref(db, `orders/${user.id}`);
+      get(ordersRef)
+        .then((snapshot) => {
+          if (snapshot.exists()) {
+            const data = snapshot.val();
+            const list = Object.keys(data).map((key) => ({
+              id: key,
+              ...data[key],
+            }));
+            setOrders(list.reverse()); // mais recentes primeiro
+          }
+        })
+        .catch((err) => console.error("Erro ao carregar pedidos do Firebase:", err))
+        .finally(() => setLoadingOrders(false));
+    }
+  }, [user?.id]);
 
   if (!user) {
     return (
@@ -47,39 +70,43 @@ const MinhaConta: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(`${API_BASE}/api/auth/profile`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(formData)
+      const updatedUser = {
+        ...user,
+        name: formData.name.trim(),
+        phone: formData.phone.trim() || null,
+        address: formData.address.trim() || null,
+      };
+
+      await update(ref(db, `users/${user.id}`), {
+        name: updatedUser.name,
+        phone: updatedUser.phone,
+        address: updatedUser.address,
+        updatedAt: Date.now(),
       });
 
-      const data = await response.json();
-
-      if (response.ok) {
-        toast.success(data.message || 'Perfil atualizado!');
-        if (token && data.user) {
-          login(token, data.user);
-        }
-        setIsEditing(false);
-      } else {
-        toast.error(data.message || 'Erro ao atualizar.');
+      if (token) {
+        login(token, updatedUser);
       }
+
+      toast.success("Perfil atualizado com sucesso!");
+      setIsEditing(false);
     } catch (error) {
-      toast.error('Erro de conexão ao salvar.');
+      console.error("Erro ao salvar perfil no Firebase:", error);
+      toast.error("Erro ao salvar alterações.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const initials = user.name
+  const initials = (user.name || "U")
     .split(" ")
     .map((n) => n[0])
     .slice(0, 2)
     .join("")
     .toUpperCase();
+
+  const fmt = (v: number) =>
+    v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
   return (
     <div className="container account-page">
@@ -179,17 +206,44 @@ const MinhaConta: React.FC = () => {
             <h3 className="account-section-title">
               <FiShoppingBag size={16} /> Meus Pedidos
             </h3>
-            <p className="account-empty-msg">
-              Histórico de pedidos em breve. Continue comprando! 🛍️
-            </p>
-            <Link to="/" className="btn-accent account-shop-btn">
-              Ver Produtos
-            </Link>
+
+            {loadingOrders ? (
+              <p className="account-empty-msg">Carregando pedidos...</p>
+            ) : orders.length > 0 ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {orders.map((o) => (
+                  <div key={o.id} style={{ background: 'var(--surface-color, #1a1a1a)', padding: '15px', borderRadius: '8px', border: '1px solid var(--border-color, #333)' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                      <span style={{ fontWeight: 'bold' }}>Pedido #{o.id.slice(-6)}</span>
+                      <span style={{ color: o.status === 'approved' || o.status === 'pago' ? '#4CAF50' : '#FF9800', fontWeight: 'bold', textTransform: 'uppercase', fontSize: '0.85rem' }}>
+                        {o.status || 'Pendente'}
+                      </span>
+                    </div>
+                    <p style={{ margin: '4px 0', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
+                      Total: {fmt(o.total || 0)} • {o.paymentMethod?.toUpperCase() || 'PIX'}
+                    </p>
+                    <p style={{ margin: '4px 0', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                      {o.createdAt ? new Date(o.createdAt).toLocaleDateString('pt-BR') : ''}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <>
+                <p className="account-empty-msg">
+                  Você ainda não realizou nenhum pedido. Continue comprando! 🛍️
+                </p>
+                <Link to="/" className="btn-accent account-shop-btn">
+                  Ver Produtos
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>
     </div>
   );
 };
+
 
 export default MinhaConta;

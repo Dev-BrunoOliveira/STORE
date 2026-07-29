@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 interface AuthUser {
-  id: number;
+  id: string | number;
   name: string;
   email: string;
   phone?: string | null;

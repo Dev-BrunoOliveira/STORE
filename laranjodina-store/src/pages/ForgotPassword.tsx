@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { API_BASE } from '../config/api';
+import { auth } from '../config/firebase';
+import { sendPasswordResetEmail } from 'firebase/auth';
 
 const ForgotPassword = () => {
     const [email, setEmail] = useState('');
@@ -12,25 +13,21 @@ const ForgotPassword = () => {
         setIsLoading(true);
 
         try {
-            const response = await fetch(`${API_BASE}/api/auth/forgot-password`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email })
-            });
-
-            const data = await response.json();
-            
-            if (response.ok) {
-                toast.success(data.message || 'E-mail enviado! Verifique sua caixa de entrada.');
+            await sendPasswordResetEmail(auth, email.trim());
+            toast.success('E-mail enviado! Verifique sua caixa de entrada.');
+        } catch (error: any) {
+            console.error('Erro ao enviar e-mail de redefinição:', error);
+            if (error.code === 'auth/user-not-found') {
+                // Para segurança, mostramos a mesma mensagem
+                toast.success('Se o e-mail existir, você receberá um link de recuperação.');
             } else {
-                toast.error(data.message || 'Erro ao processar solicitação.');
+                toast.error('Erro ao solicitar redefinição de senha.');
             }
-        } catch (error) {
-            toast.error('Erro de conexão ao tentar redefinir senha.');
         } finally {
             setIsLoading(false);
         }
     };
+
 
     return (
         <div className="container signup-page">
