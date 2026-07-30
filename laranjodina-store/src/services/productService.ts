@@ -254,9 +254,6 @@ export const seedInitialProducts = async (): Promise<ProductDetailsData[]> => {
   }
 };
 
-/**
- * Busca a lista de produtos do Firebase Database.
- */
 export const fetchProducts = async (
   count?: number,
   categorySlug?: string
@@ -270,7 +267,7 @@ export const fetchProducts = async (
       const data = snapshot.val();
       products = Object.values(data);
     } else {
-      // Se não existir nada no banco ainda, popula automaticamente
+     
       products = await seedInitialProducts();
     }
   } catch (error) {
@@ -293,9 +290,7 @@ export const fetchProducts = async (
   return products;
 };
 
-/**
- * Busca um produto específico pelo slug.
- */
+
 export const getProductBySlug = async (
   slug: string
 ): Promise<ProductDetailsData | undefined> => {
