@@ -27,12 +27,15 @@ module.exports = async function handler(req, res) {
     const client = new MercadoPagoConfig({ accessToken: mpToken });
     const payment = new Payment(client);
 
-    const { payer, totalAmount } = req.body;
+    const { payer, totalAmount, orderId, userId } = req.body;
+
+    const extRef = (userId && orderId) ? `${userId}___${orderId}` : (orderId || 'order_guest');
 
     const body = {
       transaction_amount: Number(totalAmount),
       description: 'Compra Loja Laranjodina',
       payment_method_id: 'pix',
+      external_reference: extRef,
       payer: {
         email: payer.email,
         first_name: payer.name ? payer.name.split(' ')[0] : 'Cliente',

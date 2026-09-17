@@ -156,6 +156,12 @@ const Checkout: React.FC = () => {
 
       await set(orderRef, newOrder);
 
+      const fullPayload = {
+        ...orderPayload,
+        orderId,
+        userId,
+      };
+
       // 2. Chamar endpoint Vercel Serverless (ou API_BASE)
       const apiUrl = process.env.NODE_ENV === "production" ? "" : API;
 
@@ -165,7 +171,7 @@ const Checkout: React.FC = () => {
           const res = await fetch(`${apiUrl}/api/orders/pix`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(orderPayload),
+            body: JSON.stringify(fullPayload),
           });
           if (res.ok) {
             data = await res.json();
@@ -190,7 +196,7 @@ const Checkout: React.FC = () => {
         const res = await fetch(`${apiUrl}/api/orders/preference`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(orderPayload),
+          body: JSON.stringify(fullPayload),
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.message || "Erro ao criar pagamento com Cartão.");

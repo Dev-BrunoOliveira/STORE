@@ -27,7 +27,9 @@ module.exports = async function handler(req, res) {
     const client = new MercadoPagoConfig({ accessToken: mpToken });
     const preference = new Preference(client);
 
-    const { items, payer } = req.body;
+    const { items, payer, orderId, userId } = req.body;
+
+    const extRef = (userId && orderId) ? `${userId}___${orderId}` : (orderId || 'order_guest');
 
     const mpItems = items.map(item => ({
       title: `${item.name || 'Produto'} (${item.size || 'Unico'})`,
@@ -40,6 +42,7 @@ module.exports = async function handler(req, res) {
 
     const response = await preference.create({
       body: {
+        external_reference: extRef,
         items: mpItems,
         payer: {
           name: payer.name,

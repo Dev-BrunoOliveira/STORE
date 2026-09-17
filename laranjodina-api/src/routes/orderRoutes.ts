@@ -2,12 +2,15 @@ import { Router, Request, Response } from 'express';
 import { createHmac, timingSafeEqual } from 'crypto';
 import { MercadoPagoConfig, Payment, Preference } from 'mercadopago';
 import { getProductBySlug } from '../catalog';
-import { requireAuth, AuthenticatedRequest } from '../middleware/authMiddleware';
 import { query } from '../db';
+import { db as firebaseDb } from '../config/firebase';
+import { ref, update } from 'firebase/database';
 
 const orderRouter = Router();
 
 interface OrderItem {
+  name?: string;
+  price?: number;
   slug: string;
   quantity: number;
   size: string;
@@ -43,11 +46,12 @@ function validateAndBuildItems(items: OrderItem[]) {
   }
   return items.map(item => {
     const product = getProductBySlug(item.slug);
-    if (!product) throw new Error(`Produto "${item.slug}" não encontrado.`);
+    const price = product ? product.price : Number(item.price || 0);
+    const name = product ? product.name : (item.name || 'Produto');
     const qty = Number(item.quantity);
     if (!Number.isInteger(qty) || qty < 1 || qty > 10) throw new Error('Quantidade inválida.');
     if (!item.size) throw new Error('Tamanho obrigatório.');
-    return { product, quantity: qty, size: item.size };
+    return { product: { slug: item.slug, name, price }, quantity: qty, size: item.size };
   });
 }
 
@@ -72,13 +76,15 @@ function validatePayer(payer: Payer) {
   if (!payer?.name?.trim()) throw new Error('Nome obrigatório.');
 }
 
-// POST /api/orders/pix — Cria pagamento PIX via Mercado Pago (requer login)
-orderRouter.post('/pix', requireAuth, async (req: AuthenticatedRequest, res: Response) => {
+// POST /api/orders/pix — Cria pagamento PIX via Mercado Pago
+orderRouter.post('/pix', async (req: Request, res: Response) => {
   try {
-    const { items, payer, shippingAddress } = req.body as {
+    const { items, payer, shippingAddress, orderId, userId } = req.body as {
       items: OrderItem[];
       payer: Payer;
       shippingAddress: ShippingAddress;
+      orderId?: string;
+      userId?: string;
     };
 
     validatePayer(payer);
@@ -93,15 +99,20 @@ orderRouter.post('/pix', requireAuth, async (req: AuthenticatedRequest, res: Res
     const firstName = nameParts[0];
     const lastName = nameParts.slice(1).join(' ') || firstName;
 
-    // Criar o pedido no banco
-    const orderResult: any = await query('INSERT INTO orders (user_id, total, status) VALUES (?, ?, ?)', [req.user!.id, total, 'pending']);
-    const orderId = orderResult.insertId.toString();
+    const extRef = (userId && orderId) ? `${userId}___${orderId}` : (orderId || 'order_guest');
+
+    // Tenta registrar opcionalmente no MySQL sem travar em caso de erro
+    try {
+      await query('INSERT INTO orders (user_id, total, status) VALUES (?, ?, ?)', [1, total, 'pending']);
+    } catch (dbErr) {
+      console.warn('Registro opcional MySQL ignorado:', (dbErr as Error).message);
+    }
 
     const result = await payment.create({
       body: {
         transaction_amount: total,
         payment_method_id: 'pix',
-        external_reference: orderId,
+        external_reference: extRef,
         payer: {
           email: payer.email,
           first_name: firstName,
@@ -128,13 +139,15 @@ orderRouter.post('/pix', requireAuth, async (req: AuthenticatedRequest, res: Res
   }
 });
 
-// POST /api/orders/preference — Cria preferência para Checkout Pro (requer login)
-orderRouter.post('/preference', requireAuth, async (req: AuthenticatedRequest, res: Response) => {
+// POST /api/orders/preference — Cria preferência para Checkout Pro (Cartão)
+orderRouter.post('/preference', async (req: Request, res: Response) => {
   try {
-    const { items, payer, shippingAddress } = req.body as {
+    const { items, payer, shippingAddress, orderId, userId } = req.body as {
       items: OrderItem[];
       payer: Payer;
       shippingAddress: ShippingAddress;
+      orderId?: string;
+      userId?: string;
     };
 
     validatePayer(payer);
@@ -145,12 +158,17 @@ orderRouter.post('/preference', requireAuth, async (req: AuthenticatedRequest, r
     const client = getMpClient();
     const preference = new Preference(client);
 
-    const orderResult: any = await query('INSERT INTO orders (user_id, total, status) VALUES (?, ?, ?)', [req.user!.id, calcTotal(validatedItems), 'pending']);
-    const orderId = orderResult.insertId.toString();
+    const extRef = (userId && orderId) ? `${userId}___${orderId}` : (orderId || 'order_guest');
+
+    try {
+      await query('INSERT INTO orders (user_id, total, status) VALUES (?, ?, ?)', [1, calcTotal(validatedItems), 'pending']);
+    } catch (dbErr) {
+      console.warn('Registro opcional MySQL ignorado:', (dbErr as Error).message);
+    }
 
     const result = await preference.create({
       body: {
-        external_reference: orderId,
+        external_reference: extRef,
         items: validatedItems.map(i => ({
           id: i.product.slug,
           title: `${i.product.name} (${i.size})`,
@@ -160,18 +178,18 @@ orderRouter.post('/preference', requireAuth, async (req: AuthenticatedRequest, r
         })),
         payer: { name: payer.name, email: payer.email },
         back_urls: {
-          success: `${frontendUrl}/pedido/sucesso`,
+          success: `${frontendUrl}/minha-conta`,
           failure: `${frontendUrl}/checkout`,
-          pending: `${frontendUrl}/pedido/pendente`,
+          pending: `${frontendUrl}/minha-conta`,
         },
+        auto_return: 'approved',
         shipments: { cost: 0, mode: 'not_specified' },
       },
     });
 
     return res.json({
       preferenceId: result.id,
-      initPoint: result.init_point,
-      sandboxInitPoint: result.sandbox_init_point,
+      initPoint: result.init_point || result.sandbox_init_point,
     });
   } catch (error: any) {
     console.error('Erro Preference:', error.message || error);
@@ -182,7 +200,6 @@ orderRouter.post('/preference', requireAuth, async (req: AuthenticatedRequest, r
 
 function verifyMpSignature(req: Request): boolean {
   const webhookSecret = process.env.MP_WEBHOOK_SECRET;
-  // Se o segredo não estiver configurado, rejeita em produção; permite em dev
   if (!webhookSecret || webhookSecret === 'SEU_SEGREDO_WEBHOOK_AQUI') {
     return process.env.NODE_ENV !== 'production';
   }
@@ -221,23 +238,39 @@ orderRouter.post('/webhook', async (req: Request, res: Response) => {
       const paymentClient = new Payment(client);
       const paymentInfo = await paymentClient.get({ id: body.data.id });
 
-      const orderId = paymentInfo.external_reference;
+      const extRef = paymentInfo.external_reference || '';
       const status = paymentInfo.status;
 
-      if (orderId) {
-        let dbStatus = 'pending';
-        if (status === 'approved') dbStatus = 'paid';
-        else if (status === 'rejected' || status === 'cancelled') dbStatus = 'cancelled';
+      let dbStatus = 'pendente';
+      if (status === 'approved') dbStatus = 'pago';
+      else if (status === 'rejected' || status === 'cancelled') dbStatus = 'cancelado';
 
-        await query('UPDATE orders SET status = ?, payment_id = ? WHERE id = ?', [dbStatus, body.data.id, orderId]);
-        console.log(`[MP Webhook] Pedido ${orderId} atualizado para ${dbStatus}`);
+      if (extRef.includes('___')) {
+        const [userId, orderId] = extRef.split('___');
+        try {
+          await update(ref(firebaseDb, `orders/${userId}/${orderId}`), {
+            status: dbStatus,
+            paymentId: body.data.id,
+            updatedAt: Date.now(),
+          });
+          console.log(`[MP Webhook] Pedido Firebase ${userId}/${orderId} atualizado para ${dbStatus}`);
+        } catch (fbErr) {
+          console.error('[MP Webhook] Erro ao atualizar Firebase DB:', fbErr);
+        }
+      }
+
+      try {
+        await query('UPDATE orders SET status = ?, payment_id = ? WHERE id = ?', [dbStatus, body.data.id, extRef]);
+      } catch {
+        // Ignora erro se MySQL não estiver sendo usado
       }
     }
     res.sendStatus(200);
   } catch (error) {
     console.error('Erro webhook:', error);
-    res.sendStatus(200); // sempre 200 para o MP não retentar
+    res.sendStatus(200);
   }
 });
 
 export default orderRouter;
+

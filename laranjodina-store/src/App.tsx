@@ -20,6 +20,12 @@ import ResetPassword from "./pages/ResetPassword";
 import MinhaConta from './pages/MinhaConta';
 import CartSync from './components/CartSync';
 import Admin from './pages/Admin';
+import PoliticaPrivacidade from './pages/PoliticaPrivacidade';
+import TermosUso from './pages/TermosUso';
+import TrocasDevolucoes from './pages/TrocasDevolucoes';
+import Rastreio from './pages/Rastreio';
+import Contato from './pages/Contato';
+import TabelaMedidas from './pages/TabelaMedidas';
 
 function App() {
   return (
@@ -36,13 +42,20 @@ function App() {
           <Route path="/cadastro" element={<Signup />} />
           <Route path="/produto/:slug" element={<ProductDetails />} />
           <Route path="/carrinho" element={<Cart />} />
-          <Route path="/cadastro" element={<Signup />} />
           <Route path="/login" element={<Login />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/pedido/sucesso" element={<OrderSuccess />} />
           <Route path="/pedido/pendente" element={<OrderPending />} />
           <Route path="/minha-conta" element={<MinhaConta />} />
           <Route path="/admin" element={<Admin />} />
+
+          {/* Rotas institucionais do Footer */}
+          <Route path="/politica-privacidade" element={<PoliticaPrivacidade />} />
+          <Route path="/termos-uso" element={<TermosUso />} />
+          <Route path="/trocas-devolucoes" element={<TrocasDevolucoes />} />
+          <Route path="/rastreio" element={<Rastreio />} />
+          <Route path="/contato" element={<Contato />} />
+          <Route path="/tabela-medidas" element={<TabelaMedidas />} />
 
           {/* Rota 404 */}
           <Route
