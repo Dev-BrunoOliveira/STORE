@@ -17,9 +17,9 @@ const Header: React.FC = () => {
 
   const { user, logout } = useAuthStore();
 
-  const isUserAdmin =
-    user?.isAdmin ||
-    (user?.email && (user.email.includes("brunooliver") || user.email.includes("admin")));
+  const isUserAdmin = Boolean(
+    user?.email && user.email.toLowerCase().includes("brunooliver")
+  );
 
   const handleLogout = () => {
     logout();

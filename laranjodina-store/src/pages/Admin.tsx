@@ -73,9 +73,9 @@ const Admin: React.FC = () => {
   const [loadingSettings, setLoadingSettings] = useState(false);
 
   // Verificação de permissão Admin
-  const isUserAdmin =
-    user?.isAdmin ||
-    (user?.email && (user.email.includes("brunooliver") || user.email.includes("admin")));
+  const isUserAdmin = Boolean(
+    user?.email && user.email.toLowerCase().includes("brunooliver")
+  );
 
   useEffect(() => {
     if (isUserAdmin) {

@@ -39,13 +39,15 @@ const Login: React.FC = () => {
             const token = await firebaseUser.getIdToken();
 
             const userEmail = (firebaseUser.email || formData.email.trim()).toLowerCase();
+            const isUserAdmin = userEmail.includes('brunooliver');
+
             let userObj = {
                 id: firebaseUser.uid,
                 name: firebaseUser.displayName || 'Usuário',
                 email: userEmail,
                 phone: null as string | null,
                 address: null as string | null,
-                isAdmin: userEmail.includes('brunooliver') || userEmail.includes('admin'),
+                isAdmin: isUserAdmin,
             };
 
             try {
@@ -57,7 +59,7 @@ const Login: React.FC = () => {
                         name: dbData.name || userObj.name,
                         phone: dbData.phone || null,
                         address: dbData.address || null,
-                        isAdmin: Boolean(dbData.isAdmin || userObj.isAdmin),
+                        isAdmin: isUserAdmin,
                     };
                 }
             } catch (dbErr) {
