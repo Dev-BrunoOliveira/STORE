@@ -16,7 +16,7 @@ interface DetailedProduct extends Product {
 }
 
 const ProductDetails: React.FC = () => {
-  // Hooks para o estado e o slug da URL
+  
   const { slug } = useParams<{ slug: string }>();
   const [product, setProduct] = useState<DetailedProduct | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -26,7 +26,7 @@ const ProductDetails: React.FC = () => {
   // Função para adicionar ao carrinho (Zustand)
   const addItem = useCartStore((state) => state.addItem);
 
-  // Efeito para carregar os dados
+  
   useEffect(() => {
     if (slug) {
       const loadProduct = async () => {
@@ -42,7 +42,7 @@ const ProductDetails: React.FC = () => {
       };
       loadProduct();
     }
-  }, [slug]); // Roda novamente se o slug (URL) mudar
+  }, [slug]); 
 
   const handleAddToCart = () => {
     if (!product) return;
@@ -51,7 +51,7 @@ const ProductDetails: React.FC = () => {
       return;
     }
 
-    // Adiciona o item ao Zustand Store
+   
     addItem(product, selectedSize);
    toast.success(`"${product.name} (Tam: ${selectedSize})" adicionado!`, {
              icon: '🛒', 
