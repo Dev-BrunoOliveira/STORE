@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 //import { FiShoppingCart } from "react-icons/fi";
 import { Product } from "../types/Product";
-import { getProductBySlug } from "../services/productService";
+import { getProductBySlug, getProductById } from "../services/productService";
 import { useCartStore } from "../components/store/cartStore";
 import toast from 'react-hot-toast';
 import MobileBackButton from '../components/MobileBackButton';
@@ -31,8 +31,11 @@ const ProductDetails: React.FC = () => {
     if (slug) {
       const loadProduct = async () => {
         setIsLoading(true);
-        // Busca o produto real (simulado) pelo slug
-        const data = await getProductBySlug(slug);
+        // Busca produto por slug ou por ID (caso passe id 21 diretamente)
+        let data = await getProductBySlug(slug);
+        if (!data) {
+          data = await getProductById(slug);
+        }
 
         if (data) {
           setProduct(data);
@@ -95,13 +98,19 @@ return (
   <div className="container product-details-page">
     <MobileBackButton text="Ver Mais Produtos" />
 
-    {/* Layout de Duas Colunas */}
+    {}
       <div className="product-layout-grid">
         <div className="product-gallery">
           <img
             src={product.imageUrl}
             alt={product.name}
             className="main-image"
+            onError={(e) => {
+              const target = e.currentTarget;
+              if (target.src !== "/img/logo.png") {
+                target.src = "/img/logo.png";
+              }
+            }}
           />
           <div className="thumbnail-group">
             
@@ -163,7 +172,7 @@ return (
             </div>
           </div>
 
-          {/* ── Modal Guia de Tamanhos (Tabela de Medidas) ── */}
+          {}
           {isSizeGuideOpen && (
             <div
               style={{
@@ -224,13 +233,13 @@ return (
             </div>
           )}
 
-          {/* Botão de Adicionar ao Carrinho */}
+          {}
           <button onClick={handleAddToCart} className="btn-accent btn-add-cart">
-            {/* Removendo o ícone para evitar quebras */}
+            {}
             <span>🛒 Adicionar ao Carrinho</span>
           </button>
 
-          {/* Descrição e Detalhes */}
+          {}
           <div className="product-description-box">
             <h3 className="text-uppercase-black description-title">
               Descrição

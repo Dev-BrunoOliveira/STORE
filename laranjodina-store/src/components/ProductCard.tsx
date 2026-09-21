@@ -21,7 +21,16 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   return (
     <Link to={`/produto/${product.slug}`} className="product-card">
       <div className="product-card-image">
-        <img src={product.imageUrl} alt={product.name} />
+        <img 
+          src={product.imageUrl || "/img/xicara-modelo.png"} 
+          alt={product.name} 
+          onError={(e) => {
+            const target = e.currentTarget;
+            if (target.src !== "/img/xicara-modelo.png") {
+              target.src = "/img/xicara-modelo.png";
+            }
+          }}
+        />
         {product.oldPrice && (
           <span className="badge-discount">-{discountPercent}%</span>
         )}

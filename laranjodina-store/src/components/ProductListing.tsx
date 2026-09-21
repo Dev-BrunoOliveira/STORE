@@ -1,5 +1,3 @@
-// src/components/ProductListing.tsx
-
 import React, { useState, useEffect } from "react";
 import ProductCard from "./ProductCard";
 import Spinner from "../components/Spinner";

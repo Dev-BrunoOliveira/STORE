@@ -28,7 +28,6 @@ const Header: React.FC = () => {
     navigate("/");
   };
 
-  // Fecha o dropdown ao clicar fora
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (userMenuRef.current && !userMenuRef.current.contains(e.target as Node)) {

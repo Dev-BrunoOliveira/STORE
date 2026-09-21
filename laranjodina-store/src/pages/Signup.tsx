@@ -19,7 +19,7 @@ const Signup: React.FC = () => {
     });
 
     const [error, setError] = useState('');
-    const [isLoading, setIsLoading] = useState(false); // Estado de carregamento
+    const [isLoading, setIsLoading] = useState(false); 
     const [showPassword, setShowPassword] = useState(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

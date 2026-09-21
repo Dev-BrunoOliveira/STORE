@@ -9,7 +9,7 @@ interface ProductDetailsData extends Product {
   category: string[];
 }
 
-// Backup dos produtos locais caso o banco de dados da API esteja vazio ou offline
+
 const FULL_CATALOG: ProductDetailsData[] = [
   {
     id: 1,
@@ -231,13 +231,58 @@ const FULL_CATALOG: ProductDetailsData[] = [
     sizes: ["Tamanho Único"],
     category: ["acessorios"],
   },
+  {
+    id: 21,
+    name: "Xícaras Casal",
+    price: 149.9,
+    imageUrl: "/img/xicaraCasal.webp",
+    slug: "xicara-casal",
+    description: "Xícara para casal, perfeita para presentear ou compartilhar momentos especiais.",
+    colors: ["Branca"],
+    sizes: ["Tamanho Único"],
+    category: ["acessorios"],
+  },
+  {
+    id: 22,
+    name: "Touca Laranjodina",
+    price: 89.9,
+    imageUrl: "/img/touca-modelo.jpg",
+    slug: "touca-laranjodina",
+    description: "Touca verde com logo Laranjodina bordado e ajuste confortável",
+    colors: ["Verde"],
+    sizes: ["Tamanho Único"],
+    category: ["acessorios"],
+  },
+  {
+    id: 23,
+    name: "Touca Black Laranjodina",
+    price: 89.9,
+    imageUrl: "/img/touca-modelo2.jpg",
+    slug: "touca-black-laranjodina",
+    description: "Touca preta com logo Laranjodina bordado e ajuste confortável",
+    colors: ["Preta"],
+    sizes: ["Tamanho Único"],
+    category: ["acessorios"],
+  },
+   {
+    id: 24,
+    name: "Touca Black Laranjodina",
+    price: 89.9,
+    imageUrl: "/img/touca-modelo1.jpg",
+    slug: "touca-laranjodina",
+    description: "Touca preta com logo Laranjodina bordado e ajuste confortável",
+    colors: ["Preta"],
+    sizes: ["Tamanho Único"],
+    category: ["acessorios"],
+  },
 ];
 
-export const seedInitialProducts = async (): Promise<ProductDetailsData[]> => {
+export const seedInitialProducts = async (forceOverwrite = false): Promise<ProductDetailsData[]> => {
   try {
     const productsRef = ref(db, "produtos");
     const snapshot = await get(productsRef);
-    if (!snapshot.exists()) {
+    
+    if (!snapshot.exists() || forceOverwrite) {
       const initialMap: { [id: string]: ProductDetailsData } = {};
       FULL_CATALOG.forEach(p => {
         initialMap[p.id] = p;
@@ -246,7 +291,26 @@ export const seedInitialProducts = async (): Promise<ProductDetailsData[]> => {
       return FULL_CATALOG;
     } else {
       const data = snapshot.val();
-      return Object.values(data);
+      const dbProductsMap: Record<string, ProductDetailsData> = Array.isArray(data)
+        ? data.reduce((acc, item) => {
+            if (item && item.id) acc[item.id] = item;
+            return acc;
+          }, {} as Record<string, ProductDetailsData>)
+        : data || {};
+
+      let hasChanges = false;
+      FULL_CATALOG.forEach(localProd => {
+        if (!dbProductsMap[localProd.id]) {
+          dbProductsMap[localProd.id] = localProd;
+          hasChanges = true;
+        }
+      });
+
+      if (hasChanges) {
+        await set(productsRef, dbProductsMap);
+      }
+
+      return Object.values(dbProductsMap);
     }
   } catch (err) {
     console.warn("Erro ao popular catálogo no Firebase, usando fallback local.", err);
@@ -265,15 +329,53 @@ export const fetchProducts = async (
     const snapshot = await get(productsRef);
     if (snapshot.exists()) {
       const data = snapshot.val();
-      products = Object.values(data);
+      const dbProductsMap: Record<string, ProductDetailsData> = Array.isArray(data)
+        ? data.reduce((acc, item) => {
+            if (item && item.id) acc[item.id] = item;
+            return acc;
+          }, {} as Record<string, ProductDetailsData>)
+        : data || {};
+
+      let hasChanges = false;
+      FULL_CATALOG.forEach(catProd => {
+        if (!dbProductsMap[catProd.id]) {
+          // Produto novo adicionado pelo código -> insere no mapa
+          dbProductsMap[catProd.id] = catProd;
+          hasChanges = true;
+        } else {
+          // Produto já existe no Firebase. Se a imageUrl estiver totalmente vazia ou indefinida, usa a do código
+          const existing = dbProductsMap[catProd.id];
+          if (!existing.imageUrl || existing.imageUrl.trim() === "") {
+            dbProductsMap[catProd.id] = { ...existing, imageUrl: catProd.imageUrl };
+            hasChanges = true;
+          }
+        }
+      });
+
+      // Se houver novos produtos do código, sincroniza no Firebase em segundo plano
+      if (hasChanges) {
+        set(productsRef, dbProductsMap).catch((err) =>
+          console.warn("Erro ao sincronizar produtos ausentes no Firebase:", err)
+        );
+      }
+
+      products = Object.values(dbProductsMap);
     } else {
-     
       products = await seedInitialProducts();
     }
   } catch (error) {
     console.warn("Erro ao buscar produtos do Firebase, usando catálogo local (fallback).", error);
     products = FULL_CATALOG;
   }
+
+  // Garantir que nenhum produto fique sem imagem
+  products = products.map((prod) => {
+    if (!prod.imageUrl || prod.imageUrl.trim() === "") {
+      const catalogMatch = FULL_CATALOG.find((c) => String(c.id) === String(prod.id));
+      return { ...prod, imageUrl: catalogMatch?.imageUrl || "/img/logo.png" };
+    }
+    return prod;
+  });
 
   if (categorySlug === "mais-vendidos") {
     products = products.slice(0, 4);
@@ -290,12 +392,18 @@ export const fetchProducts = async (
   return products;
 };
 
-
 export const getProductBySlug = async (
   slug: string
 ): Promise<ProductDetailsData | undefined> => {
   const allProducts = await fetchProducts();
-  return allProducts.find(p => p.slug === slug);
+  return allProducts.find(p => p.slug.toLowerCase() === slug.toLowerCase());
+};
+
+export const getProductById = async (
+  id: number | string
+): Promise<ProductDetailsData | undefined> => {
+  const allProducts = await fetchProducts();
+  return allProducts.find(p => String(p.id) === String(id));
 };
 
 /**
