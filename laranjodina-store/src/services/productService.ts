@@ -255,7 +255,7 @@ const FULL_CATALOG: ProductDetailsData[] = [
   },
   {
     id: 23,
-    name: "Touca Black",
+    name: "Touca Black LD",
     price: 89.9,
     imageUrl: "/img/touca-modelo2.jpg",
     slug: "touca-black-laranjodina",
@@ -266,10 +266,10 @@ const FULL_CATALOG: ProductDetailsData[] = [
   },
    {
     id: 24,
-    name: "Touca Green",
+    name: "Touca Green LD",
     price: 89.9,
     imageUrl: "/img/touca-modelo1.jpg",
-    slug: "touca-green-laranjodina",
+    slug: "touca-laranjodina",
     description: "Touca verde com logo Laranjodina bordado e ajuste confortável",
     colors: ["Verde"],
     sizes: ["Tamanho Único"],
