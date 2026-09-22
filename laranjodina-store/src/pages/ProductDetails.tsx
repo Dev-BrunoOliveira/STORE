@@ -25,17 +25,28 @@ const ProductDetails: React.FC = () => {
   const addItem = useCartStore((state) => state.addItem);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     if (slug) {
       const loadProduct = async () => {
         setIsLoading(true);
-        let data = await getProductBySlug(slug);
+        let data: DetailedProduct | undefined;
+        
+        // Se a rota for numérica (ex: /produto/24), tenta primeiro pelo ID
+        if (!isNaN(Number(slug))) {
+          data = await getProductById(slug);
+        }
+        if (!data) {
+          data = await getProductBySlug(slug);
+        }
         if (!data) {
           data = await getProductById(slug);
         }
 
         if (data) {
           setProduct(data);
-          setSelectedSize(data.sizes[0] || null);
+          setSelectedSize(data.sizes?.[0] || null);
+        } else {
+          setProduct(null);
         }
         setIsLoading(false);
       };
@@ -102,8 +113,8 @@ const ProductDetails: React.FC = () => {
             className="main-image"
             onError={(e) => {
               const target = e.currentTarget;
-              if (target.src !== "/img/logo.png") {
-                target.src = "/img/logo.png";
+              if (!target.src.endsWith("/img/LOGO.png")) {
+                target.src = "/img/LOGO.png";
               }
             }}
           />

@@ -19,15 +19,15 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     : null;
 
   return (
-    <Link to={`/produto/${product.slug}`} className="product-card">
+    <Link to={`/produto/${product.slug || product.id}`} className="product-card">
       <div className="product-card-image">
         <img 
-          src={product.imageUrl || "/img/xicara-modelo.png"} 
+          src={product.imageUrl || "/img/LOGO.png"} 
           alt={product.name} 
           onError={(e) => {
             const target = e.currentTarget;
-            if (target.src !== "/img/xicara-modelo.png") {
-              target.src = "/img/xicara-modelo.png";
+            if (!target.src.endsWith("/img/LOGO.png")) {
+              target.src = "/img/LOGO.png";
             }
           }}
         />

@@ -277,7 +277,7 @@ const Admin: React.FC = () => {
   const handleRestoreInitialCatalog = async () => {
     if (!window.confirm("Deseja importar o catálogo padrão inicial para o Firebase?")) return;
     try {
-      await seedInitialProducts();
+      await seedInitialProducts(true);
       toast.success("Catálogo inicial carregado no Firebase!");
       loadProducts();
     } catch (err) {
