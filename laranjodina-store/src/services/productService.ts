@@ -294,6 +294,18 @@ const FULL_CATALOG: ProductDetailsData[] = [
     sizes: ["Tamanho Único"],
     category: ["acessorios"],
   },
+  {
+    id: 25,
+    name: "Xícara Laranjalari",
+    price: 69.9,
+    imageUrl: "/img/xicara-modelo1.jpg",
+    slug: "xicara-laranjalari",
+    description:
+      "Xícara de cerâmica de alta qualidade para começar o dia com café preto",
+    colors: ["Branca"],
+    sizes: ["Tamanho Único"],
+    category: ["acessorios"],
+  },
 ];
 
 export const seedInitialProducts = async (
