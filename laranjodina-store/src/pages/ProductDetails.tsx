@@ -4,10 +4,9 @@ import { useParams, Link } from "react-router-dom";
 import { Product } from "../types/Product";
 import { getProductBySlug, getProductById } from "../services/productService";
 import { useCartStore } from "../components/store/cartStore";
-import toast from 'react-hot-toast';
-import MobileBackButton from '../components/MobileBackButton';
-import ReviewSection from '../components/ReviewSection';
-
+import toast from "react-hot-toast";
+import MobileBackButton from "../components/MobileBackButton";
+import ReviewSection from "../components/ReviewSection";
 
 interface DetailedProduct extends Product {
   description: string;
@@ -16,7 +15,6 @@ interface DetailedProduct extends Product {
 }
 
 const ProductDetails: React.FC = () => {
-  
   const { slug } = useParams<{ slug: string }>();
   const [product, setProduct] = useState<DetailedProduct | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -26,12 +24,10 @@ const ProductDetails: React.FC = () => {
   // Função para adicionar ao carrinho (Zustand)
   const addItem = useCartStore((state) => state.addItem);
 
-  
   useEffect(() => {
     if (slug) {
       const loadProduct = async () => {
         setIsLoading(true);
-        // Busca produto por slug ou por ID (caso passe id 21 diretamente)
         let data = await getProductBySlug(slug);
         if (!data) {
           data = await getProductById(slug);
@@ -45,7 +41,7 @@ const ProductDetails: React.FC = () => {
       };
       loadProduct();
     }
-  }, [slug]); 
+  }, [slug]);
 
   const handleAddToCart = () => {
     if (!product) return;
@@ -54,12 +50,11 @@ const ProductDetails: React.FC = () => {
       return;
     }
 
-   
     addItem(product, selectedSize);
-   toast.success(`"${product.name} (Tam: ${selectedSize})" adicionado!`, {
-             icon: '🛒', 
-        });
-    };
+    toast.success(`"${product.name} (Tam: ${selectedSize})" adicionado!`, {
+      icon: "🛒",
+    });
+  };
 
   const formatPrice = (price: number) => {
     return price.toLocaleString("pt-BR", {
@@ -94,11 +89,11 @@ const ProductDetails: React.FC = () => {
     );
   }
 
-return (
-  <div className="container product-details-page">
-    <MobileBackButton text="Ver Mais Produtos" />
+  return (
+    <div className="container product-details-page">
+      <MobileBackButton text="Ver Mais Produtos" />
 
-    {}
+      {}
       <div className="product-layout-grid">
         <div className="product-gallery">
           <img
@@ -112,9 +107,7 @@ return (
               }
             }}
           />
-          <div className="thumbnail-group">
-            
-          </div>
+          <div className="thumbnail-group"></div>
         </div>
 
         <div className="product-info-box">
@@ -128,7 +121,14 @@ return (
           </div>
 
           <div className="size-selector-group">
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: "8px",
+              }}
+            >
               <p className="size-label" style={{ margin: 0 }}>
                 Tamanho:{" "}
                 <span style={{ color: "var(--color-accent)" }}>
@@ -150,7 +150,7 @@ return (
                   alignItems: "center",
                   gap: "4px",
                   fontWeight: "bold",
-                  padding: "4px 0"
+                  padding: "4px 0",
                 }}
               >
                 📏 Guia de Tamanhos
@@ -177,7 +177,10 @@ return (
             <div
               style={{
                 position: "fixed",
-                top: 0, left: 0, right: 0, bottom: 0,
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
                 background: "rgba(0,0,0,0.85)",
                 display: "flex",
                 justifyContent: "center",
@@ -198,7 +201,7 @@ return (
                   position: "relative",
                   maxHeight: "90vh",
                   overflowY: "auto",
-                  textAlign: "center"
+                  textAlign: "center",
                 }}
                 onClick={(e) => e.stopPropagation()}
               >
@@ -220,14 +223,27 @@ return (
                   ✕
                 </button>
 
-                <h2 className="text-uppercase-black" style={{ marginTop: 0, fontSize: "1.2rem", color: "var(--color-accent)", marginBottom: "15px" }}>
+                <h2
+                  className="text-uppercase-black"
+                  style={{
+                    marginTop: 0,
+                    fontSize: "1.2rem",
+                    color: "var(--color-accent)",
+                    marginBottom: "15px",
+                  }}
+                >
                   GUIA DE MEDIDAS OVERSIZED
                 </h2>
 
                 <img
                   src="/img/tabela-medidas.png"
                   alt="Tabela de Medidas Camisetas Oversized"
-                  style={{ maxWidth: "100%", height: "auto", borderRadius: "8px", border: "1px solid #333" }}
+                  style={{
+                    maxWidth: "100%",
+                    height: "auto",
+                    borderRadius: "8px",
+                    border: "1px solid #333",
+                  }}
                 />
               </div>
             </div>
