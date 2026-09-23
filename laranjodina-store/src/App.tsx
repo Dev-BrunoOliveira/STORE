@@ -49,7 +49,7 @@ function App() {
           <Route path="/minha-conta" element={<MinhaConta />} />
           <Route path="/admin" element={<Admin />} />
 
-          {/* Rotas institucionais do Footer */}
+          {}
           <Route path="/politica-privacidade" element={<PoliticaPrivacidade />} />
           <Route path="/termos-uso" element={<TermosUso />} />
           <Route path="/trocas-devolucoes" element={<TrocasDevolucoes />} />
@@ -57,7 +57,7 @@ function App() {
           <Route path="/contato" element={<Contato />} />
           <Route path="/tabela-medidas" element={<TabelaMedidas />} />
 
-          {/* Rota 404 */}
+          {}
           <Route
             path="*"
             element={
