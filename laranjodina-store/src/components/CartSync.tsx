@@ -9,7 +9,7 @@ const CartSync = () => {
     const { items } = useCartStore();
     const isInitialMount = useRef(true);
 
-    // Quando o usuário loga, baixa o carrinho do Firebase
+    
     useEffect(() => {
         if (user) {
             const fetchCart = async () => {
@@ -18,11 +18,10 @@ const CartSync = () => {
                     if (snapshot.exists()) {
                         const cloudItems = snapshot.val();
                         
-                        // Pegamos os itens atuais do LocalStorage
+                       
                         const localItems = useCartStore.getState().items;
                         
-                        // Mesclar: se já existe, mantém. Se não, adiciona o da nuvem.
-                        // (Lógica simples: substituímos pelo da nuvem + local combinados sem duplicar IDs iguais de mesmo tamanho)
+                        
                         const merged = [...localItems];
                         cloudItems.forEach((cloudItem: any) => {
                             const exists = merged.find(i => i.product.id === cloudItem.product.id && i.size === cloudItem.size);
